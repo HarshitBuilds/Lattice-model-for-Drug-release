@@ -1,1 +1,1 @@
-Ongoing project in Molecular simulatons and drug delivery lab
+Ongoing project in Molecular simulatons and Drug Delivery Lab
