@@ -15,6 +15,7 @@ nav_upper=[] #average n upper lattice
 nav2=[] #stddev n
 sar=[] #number of values for each t
 sizedist = [] #to store size distribution
+msd = [] #to store mean square displacement for all the MC simulations
 index=0
 for i in range(totalframes):
   fname="rand_"+str(i+1)+".dat"
@@ -51,7 +52,7 @@ for i in range(totalframes):
           #   sar[t]+=1   
         else: #for retrieving mean square displacement data from the .dat file
            l = line.split()
-           msd = float(l[1])
+           msd.append(float(l[1]))
 
       line = next_line  # Move to the next line (or exit loop)
         
@@ -101,6 +102,11 @@ if not os.path.exists(percent_file): #if PercentageTrapped.txt not present then 
 with open(percent_file, 'a') as f: #if PercentageTrapped.txt already present
     print(a, "\t",w1, "\t",w2,"\t",interface,"\t", x, "\t", x1, "\t", x2, file=f)
 
+mean_r_square = 0.0 #average mean square displacement across all the MC simulations
+for i in range(len(msd)):
+   mean_r_square += msd[i]
+mean_r_square = mean_r_square/len(msd)
+
 #add code for msd txt file similar to percentagetrapped.txt 
 os.chdir("/home/root1/Desktop/LatticeCodes/Trials")
 percent_file = "MeanSquareDisplacement.txt"
@@ -109,7 +115,7 @@ if not os.path.exists(percent_file): #if MeanSquareDisplacement.txt not present 
         print("Tau", "\t", "MSD",file=f)
         
 with open(percent_file, 'a') as f: #if MeanSquareDisplacement.txt already present
-    print(tau, "\t",msd, file=f)     
+    print(tau, "\t",mean_r_square, file=f)     
           
 
         
