@@ -6,14 +6,13 @@
 #include "cell.h"
 #include "antcluster.h"
 #include "coordinate.h"
-#include "window.h"
 #include <boost/filesystem.hpp>
 using namespace std;
 
 class System
 {
   public:
-    int RANDOMSEED, MAXSWEEPS,NG,NG2,NANT,NWALL,NWALL1,NWALL2, NSAMPLE, NG_new,x; //split into 2 lattices.
+    int RANDOMSEED, MAXSWEEPS,NG,NG2,NANT,NWALL,NWALL1,NWALL2, NSAMPLE, NG_new,x, tau_val; //split into 2 lattices.
     double WALLF1, WALLF2, PWALL, ANTF, PJUMP; //ANTF for the lower lattice.
     // 1 for lower lattice
     int NANT1 = 0;
@@ -40,19 +39,19 @@ class System
         options_description desc("Usage:\nANT <options>");
         desc.add_options()
         ("help,h", "print usage message")
-        ("MAXSWEEPS,s", value<int>(&MAXSWEEPS)->default_value(10000), "max. no. of MC sweeps (default 100)")
+        ("MAXSWEEPS,s", value<int>(&MAXSWEEPS)->default_value(10), "max. no. of MC sweeps (default 100)")
 	    ("RANDOMSEED,r", value<int>(&RANDOMSEED)->default_value(1), "seed for random number generator (default 1)")
 	    ("NSAMPLE,S", value<int>(&NSAMPLE)->default_value(100), "sampling frequency in #MC sweeps (default 100)")
         ("WALLF1, 1", value<double>(&WALLF1)->default_value(0.0), "fraction of walls (default 0.5)")
         ("WALLF2, 2", value<double>(&WALLF2)->default_value(0.0), "fraction of walls (default 0.5)")
         // ("x,x", value<int>(&x)->default_value(5))
 	    ("PWALL,p", value<double>(&PWALL)->default_value(0.0), "probability of crossing wall (0 for completely block, 1 if completely free) (default 0.0)")
-        ("ANTF,a", value<double>(&ANTF)->default_value(0.5), "fraction of ants (default 0.5)")
+        ("ANTF,a", value<double>(&ANTF)->default_value(0.01), "fraction of ants (default 0.5)")
         /*("ANTF2,a", value<double>(&ANTF2)->default_value(0.0), "fraction of ants (default 0.0)")*/
         ("NG,n", value<int>(&NG)->default_value(10), "#cells in each direction (default 10) ")
         ("x,x", value<int>(&x)->default_value(5), "lattice split factor (default 0.2*NG)")
         ("PJUMP,pj", value<double>(&PJUMP)->default_value(0.5), "probability of movement from top to bottom (default 0.5)")
-        ("tau,tau", value<int>(&tau)->default_value(10), "tau value for calculating mean square displacement");
+        ("tau_val,tau_val", value<int>(&tau_val)->default_value(5), "tau value for calculating mean square displacement");
         variables_map vm;
         store(parse_command_line(argc, argv, desc), vm);
         notify(vm);
@@ -89,7 +88,7 @@ class System
     vector<int> tent1;
     vector<int> tent2;
     vector<int> sizedist; //to store # of cluster of each size
-    vector<int> msd; //for storing msd for every steps followed by averaging
+    vector<double> msd; //for storing msd for every steps followed by averaging
     int *walls1; //for first lattice 
     int *walls2; //for second lattice
     void CreateWalls();
@@ -97,7 +96,7 @@ class System
     vector<Cell> C; //vector of cells
     void CreateCells();
     
-    vector<Window> W; // the sliding window to store indices of 2*m timesteps at a given time
+    vector<vector<int>> W; // the sliding window to store indices of 2*tau timesteps at a given time
     void Move();
     void writeGNU(int);
 

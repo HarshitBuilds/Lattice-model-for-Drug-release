@@ -5,6 +5,7 @@
 using namespace std;
 void System::CreateAnts()
 {
+	W.resize(2*tau_val, vector<int> (NANT,0));
     const gsl_rng_type * gsl_T;
     gsl_rng * gsl_r;
     gsl_T = gsl_rng_default;
@@ -19,7 +20,7 @@ void System::CreateAnts()
     int* filledcells=new int[NANT]; //index of all possible cells occupied by ants
     gsl_ran_shuffle(gsl_r, cellindex, NG_new, sizeof(int)); //for shuffling the order of elements inside the array
     gsl_ran_choose(gsl_r, filledcells, NANT, cellindex, NG_new, sizeof(int)); //randomly choosing NANT entries from cellindex and passing it to filledcells.
-    Window initialtime;
+    vector<int> initialtime;
 	for(int i=0; i<NANT; i++)
     {
       	AntCluster ac; 
@@ -33,14 +34,14 @@ void System::CreateAnts()
       	ac.cells.push_back(filledcells[i]); //stores index
       	ac.initialCoordinates.push_back(coord); //stores intial coordinates
       	ac.newCoordinates.push_back(coord); //stores new coordinates
-      	initialtime.indices.push_back(filledcells[i]) //stores the location of ants at t = 0
+      	initialtime.push_back(filledcells[i]); //stores the location of ants at t = 0
 
       	AC.push_back(ac); 
 		//ac stores info for individual ants and AC is a list storing info for all the ants.
 
     }
-	W.push_back(initialtime);
-  //  cout<<"Ants created\n";
+	W[0]=initialtime; //indices of ants at t = 0
+    cout<<"Ants created\n";
 	delete[] filledcells;
 	delete[] cellindex;
     gsl_rng_free (gsl_r); //to free up memory allocated to the random number generator.
@@ -413,12 +414,12 @@ void System::Move()
       	}
      
 
-		double msd_step = 0.0; //mean square displacement of the overall system in a single sweep
+		// double msd_step = 0.0; //mean square displacement of the overall system in a single sweep
 
-		for(int j =0; j<100 ; j++) //
-		{
-			dist[j] = 0;
-		}
+		// for(int j =0; j<100 ; j++) //
+		// {
+		// 	dist[j] = 0;
+		// }
 		//commenting coordinate code
 		//for(it = AC.begin(); it!=AC.end(); it++) //iterates over all the ant clusters
   // 		{
@@ -456,11 +457,11 @@ void System::Move()
   // 			
 		//	//cout<<k<<'\t'<<msd_step<<endl;
 		//}
-		Window latertime;
+		vector<int> latertime;
 		if(k==0)
-			latertime.indices = W[0].indices; //take the indices for the initial time
+			latertime = W[0]; //take the indices for the initial time
 		else if(k>0) 
-			latertime.indices = W[p-1].indices; //intialising present timestep indices with previous timestep indices
+			latertime = W[p-1]; //intialising present timestep indices with previous timestep indices
 		
 		int Numcluster = AC.size(); //to store number of cluster in that timestep
 		nantc = AC.size(); //number of unsplitted cluster.
@@ -643,8 +644,8 @@ void System::Move()
 					//updating the indices vector in latertime for this cluster
 					for(int j=0;j<NANT;j++)
 							{
-								if(oldcells[i]==latertime.indices[j])
-									latertime.indices[j] = newcells[i]; //new index of the corresponding ant
+								if(oldcells[i]==latertime[j])
+									latertime[j] = newcells[i]; //new index of the corresponding ant
 							}
 		      		if(newcells[i]==-1)
 		      		{  
@@ -794,8 +795,8 @@ void System::Move()
 					{
 						for(int j=0;j<NANT;j++)
 							{
-								if(newcells[m]==latertime.indices[j])
-									latertime.indices[j] = oldcells[m]; //replacing with the old indexes due to rejection of the move
+								if(newcells[m]==latertime[j])
+									latertime[j] = oldcells[m]; //replacing with the old indexes due to rejection of the move
 							}
 					}
 				}
@@ -803,66 +804,70 @@ void System::Move()
 			
       	}
 		
-		W[p].push_back(latertime); 
+		W[p]=latertime; 
 	
 		//code for evaluating msd in a window
-		if(p==(2*tau)-1||k=MAXSWEEPS-1)
+		if(p==(2*tau_val)-1||k==MAXSWEEPS-1)
 		{
 			if(k==MAXSWEEPS-1) //last iteration
 			{
-				for(int i=0;i<=p-tau;i++) 
+				for(int i=0;i<=p-tau_val;i++) 
 				{
 					double r_square = 0; //r square for a particular interval.
 					int n1 = NANT; //number of ants in the bottom lattice at time t = i + tau
 					for(int j=0;j<NANT;j++)
 					{
-						if(W[i+tau].indices[j]==-1||W[i+tau].indices[j]>=(NG_new)) //condition for ant to be outside bottom lattice
+						if(W[i+tau_val][j]==-1||W[i+tau_val][j]>=(NG_new)) //condition for ant to be outside bottom lattice
 						{
 							n1--;
 							continue;
 						}
 						else //if inside then compute msd for that ant
 						{
-							int x0 = int(W[i].indices[j]/NG);
-							int y0 = W[i].indices[j]%NG;
 							
-							int xm = int(W[i+tau].indices[j]/NG);
-							int ym = W[i+tau].indices[j]%NG; 
+							int x0 = int(W[i][j]/NG);
+							int y0 = W[i][j]%NG;
 							
-							r_square += ((ym*ym) - (y0*y0)) + ((xm*xm) - (x0*x0)); //summed over each ant
+							int xm = int(W[i+tau_val][j]/NG);
+							int ym = W[i+tau_val][j]%NG; 
+							//cout<<x0<<" "<<y0<<" "<<" "<<xm<<" "<<ym<<endl;
+							r_square += (ym - y0)*(ym - y0) + (xm - x0)*(xm - x0); //summed over each ant
 						}
 					}
 						r_square = r_square/(n1);
 						msd.push_back(r_square); 
 				}
 				//evaluating msd for overall simulation from msd vector 
+				mean_r_square = 0;
+				
 				for(int i =0;i<msd.size();i++)
 				{
 					mean_r_square += msd[i];
 				}  
 				mean_r_square = mean_r_square/msd.size();
+				
 			}
 
 			else
 			{
-				for(int i=0;i<tau;i++) //in every window tau r^2 are evaluated 
+				for(int i=0;i<tau_val;i++) //in every window tau r^2 are evaluated 
 				{
 					double r_square = 0; //r square for a particular interval.
 					int n1 = NANT; //number of ants in the bottom lattice at time t = i + tau
 					for(int j=0;j<NANT;j++)
 					{ //add condition for exit from bottom part or outside then no evaluation.
-					if(W[i+tau].indices[j]==-1||W[i+tau].indices[j]>=(NG_new)) //condition for ant to be outside bottom lattice
+					if(W[i+tau_val][j]==-1||W[i+tau_val][j]>=(NG_new)) //condition for ant to be outside bottom lattice
 					{
 						n1--;
 						continue;
 					}
 					else
 					{
-						int x0 = int(W[i].indices[j]/NG);
-						int y0 = W[i].indices[j]%NG;
+						int x0 = int(W[i][j]/NG);
+						int y0 = W[i][j]%NG;
 						
-						int xm = int(W[i+tau].indices[j]/NG);
-						int ym = W[i+tau].indices[j]%NG; 
+						int xm = int(W[i+tau_val][j]/NG);
+						int ym = W[i+tau_val][j]%NG; 
 						
 						r_square += ((ym*ym) - (y0*y0)) + ((xm*xm) - (x0*x0)); //summed over each ant
 					}
@@ -870,11 +875,11 @@ void System::Move()
 					r_square = r_square/(n1);
 					msd.push_back(r_square); 
 				}
-				for (int i=0;i<tau;i++) //for changing tau values in the sliding window
+				for (int i=0;i<tau_val;i++) //for changing tau values in the sliding window
 				{
-					W[i].indices = W[i+tau].indices;
+					W[i] = W[i+tau_val];
 				}
-				p = tau; //bringing p to the center.
+				p = tau_val; //bringing p to the center.
 			}
 		}	
 		else
@@ -1065,7 +1070,7 @@ void System::writeOutput()
 		out<<mean_r_square<<endl;
 
 		//adding size distribution data to the last file
-		for(int i =0;i< sizedist.size();i++)
+		for(int i =0;i<sizedist.size();i++)
 		{
 			out<<sizedist[i]<<"\t";
 		}
