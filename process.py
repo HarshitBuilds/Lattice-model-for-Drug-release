@@ -1,20 +1,20 @@
 import os
 from numpy import sqrt
 import sys
-totalframes=int(sys.argv[1])
+totalframes=int(sys.argv[1]) #number of MC simulations to average over.
 a=float(sys.argv[2])
 w1 = float(sys.argv[3])
 w2=float(sys.argv[4])
 interface=int(sys.argv[5])
 maxsweeps=int(sys.argv[6])
-# totalframes = 1000 #averges over 100 simulation runs
+tau = int(sys.argv[7]) #tau for calculating msd
 thalfav=0.0 #average thalf
 nav=[] #average n 
 nav_lower=[] #average n lower lattice
 nav_upper=[] #average n upper lattice
 nav2=[] #stddev n
 sar=[] #number of values for each t
-sizedist = []
+sizedist = [] #to store size distribution
 index=0
 for i in range(totalframes):
   fname="rand_"+str(i+1)+".dat"
@@ -24,30 +24,34 @@ for i in range(totalframes):
     line = f.readline()  # Read the first line
     while line: #iterating over lines in the file
       next_line = f.readline()  # Check if there's a next line
-      if not next_line:  # Last line
+      if not next_line:  # Last line check, for size distribution data printed in the last line of the .dat file
         line = line.strip()  # strip the current line
         tokens = [token for token in line.split("\t") if token]  # Split on tabs and filter out empty tokens
         temp = [int(token) for token in tokens]  # Convert tokens to integers (or float(token) if needed)
       
       else: #if not the last line
-        l=line.split()
-        t=int(l[1])
-        n=int(l[3])
-        n1=int(l[5]) #for lower lattice
-        n2=int(l[7]) #for upper lattice
-        if t>=index:
-          nav.append(n)
-          nav_lower.append(n1)
-          nav_upper.append(n2)
-          nav2.append(n*n)
-          sar.append(1)
-          index=index+1
-        else:
-          nav[t]+=n
-          nav_lower[t]+=n1
-          nav_upper[t]+=n2  
-          nav2[t]+=n*n
-          sar[t]+=1   
+        if(index<=maxsweeps):
+          l=line.split()
+          t=int(l[1])
+          n=int(l[3])
+          n1=int(l[5]) #for lower lattice
+          n2=int(l[7]) #for upper lattice
+          if t>=index:
+            nav.append(n)
+            nav_lower.append(n1)
+            nav_upper.append(n2)
+            nav2.append(n*n)
+            sar.append(1)
+            index=index+1
+          # else:
+          #   nav[t]+=n
+          #   nav_lower[t]+=n1
+          #   nav_upper[t]+=n2  
+          #   nav2[t]+=n*n
+          #   sar[t]+=1   
+        else: #for retrieving mean square displacement data from the .dat file
+           l = line.split()
+           msd = float(l[1])
 
       line = next_line  # Move to the next line (or exit loop)
         
@@ -97,8 +101,15 @@ if not os.path.exists(percent_file): #if PercentageTrapped.txt not present then 
 with open(percent_file, 'a') as f: #if PercentageTrapped.txt already present
     print(a, "\t",w1, "\t",w2,"\t",interface,"\t", x, "\t", x1, "\t", x2, file=f)
 
-
+#add code for msd txt file similar to percentagetrapped.txt 
+os.chdir("/home/root1/Desktop/LatticeCodes/Trials")
+percent_file = "MeanSquareDisplacement.txt"
+if not os.path.exists(percent_file): #if MeanSquareDisplacement.txt not present then create 
+    with open(percent_file, 'a') as f:
+        print("Tau", "\t", "MSD",file=f)
         
+with open(percent_file, 'a') as f: #if MeanSquareDisplacement.txt already present
+    print(tau, "\t",msd, file=f)     
           
 
         

@@ -89,11 +89,11 @@ class System
     vector<int> tent1;
     vector<int> tent2;
     vector<int> sizedist; //to store # of cluster of each size
-    vector<int> msd; //for storing msd for every (N-m) steps followed by averaging
+    vector<int> msd; //for storing msd for every steps followed by averaging
     int *walls1; //for first lattice 
     int *walls2; //for second lattice
     void CreateWalls();
-    
+    double mean_r_square; //overall mean square displacement for particular tau value
     vector<Cell> C; //vector of cells
     void CreateCells();
     

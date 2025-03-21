@@ -639,13 +639,15 @@ void System::Move()
 		  		while(it2!=(*it).cells.end()) //iterating over the different ants in that cluster
 		  		{
 		      		int cellindex=(*it2);
-		      		if(newcells[i]==-1)
-		      		{  
-						for(int j=0;j<NANT;j++)
+
+					//updating the indices vector in latertime for this cluster
+					for(int j=0;j<NANT;j++)
 							{
 								if(oldcells[i]==latertime.indices[j])
 									latertime.indices[j] = newcells[i]; //new index of the corresponding ant
 							}
+		      		if(newcells[i]==-1)
+		      		{  
 						if (r == 3) //ant trying to escape from the bottom boundary. 
 						{
 							C[oldcells[i]].isAnt = true; //reject the move 
@@ -677,12 +679,7 @@ void System::Move()
 						movetracker++; 
 						//cout<<"i="<<i<<"\tnewcell="<<newcells[i]<<endl;
 			  			C[newcells[i]].isAnt=true;
-						//updating the indices vector in latertime for this cluster
-						for(int j=0;j<NANT;j++)
-							{
-								if(oldcells[i]==latertime.indices[j])
-									latertime.indices[j] = newcells[i]; //new index of the corresponding ant
-							}
+						
 
 						//  cout<<"i="<<i<<"\tcellindex="<<cellindex<<"\tnewcells="<<newcells[i]<<endl;
 						if (C[newcells[i]].row == x && C[oldcells[i]].row == x-1) //from bottom to top
@@ -811,7 +808,7 @@ void System::Move()
 		//code for evaluating msd in a window
 		if(p==(2*tau)-1||k=MAXSWEEPS-1)
 		{
-			if(k==MAXSWEEPS-1)
+			if(k==MAXSWEEPS-1) //last iteration
 			{
 				for(int i=0;i<=p-tau;i++) 
 				{
@@ -834,10 +831,16 @@ void System::Move()
 							
 							r_square += ((ym*ym) - (y0*y0)) + ((xm*xm) - (x0*x0)); //summed over each ant
 						}
-						}
+					}
 						r_square = r_square/(n1);
 						msd.push_back(r_square); 
 				}
+				//evaluating msd for overall simulation from msd vector 
+				for(int i =0;i<msd.size();i++)
+				{
+					mean_r_square += msd[i];
+				}  
+				mean_r_square = mean_r_square/msd.size();
 			}
 
 			else
@@ -1058,12 +1061,15 @@ void System::writeOutput()
 			}
 
 		}
-		
+		//adding msd for the simulation to the output file
+		out<<mean_r_square<<endl;
+
+		//adding size distribution data to the last file
 		for(int i =0;i< sizedist.size();i++)
 		{
 			out<<sizedist[i]<<"\t";
 		}
-
+		
 	
 	
 	/*for (int i = finalt+2; i< MAXSWEEPS/10; i++)
