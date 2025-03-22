@@ -77,7 +77,7 @@ class System
     
     }
     
-    
+    vector<vector<int>> W; // the sliding window to store indices of 2*tau timesteps at a given time
     list<AntCluster> AC;   //list of ant clusters, in the beginning all ants are an independent cluster
     void CreateAnts(); 
     void CreateAntClusters(); //for blind ant case
@@ -96,7 +96,7 @@ class System
     vector<Cell> C; //vector of cells
     void CreateCells();
     
-    vector<vector<int>> W; // the sliding window to store indices of 2*tau timesteps at a given time
+    
     void Move();
     void writeGNU(int);
 

@@ -52,7 +52,7 @@ for i in range(totalframes):
           #   sar[t]+=1   
         else: #for retrieving mean square displacement data from the .dat file
            l = line.split()
-           msd.append(float(l[1]))
+           msd.append(float(l[0]))
 
       line = next_line  # Move to the next line (or exit loop)
         
@@ -109,12 +109,12 @@ mean_r_square = mean_r_square/len(msd)
 
 #add code for msd txt file similar to percentagetrapped.txt 
 os.chdir("/home/root1/Desktop/LatticeCodes/Trials")
-percent_file = "MeanSquareDisplacement.txt"
-if not os.path.exists(percent_file): #if MeanSquareDisplacement.txt not present then create 
+percent_file = "MSD.txt"
+if not os.path.exists(percent_file): #if MSD.txt not present then create 
     with open(percent_file, 'a') as f:
         print("Tau", "\t", "MSD",file=f)
         
-with open(percent_file, 'a') as f: #if MeanSquareDisplacement.txt already present
+with open(percent_file, 'a') as f: #if MSD.txt already present
     print(tau, "\t",mean_r_square, file=f)     
           
 

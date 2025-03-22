@@ -41,7 +41,7 @@ void System::CreateAnts()
 
     }
 	W[0]=initialtime; //indices of ants at t = 0
-    cout<<"Ants created\n";
+    //cout<<"Ants created\n";
 	delete[] filledcells;
 	delete[] cellindex;
     gsl_rng_free (gsl_r); //to free up memory allocated to the random number generator.
@@ -412,8 +412,6 @@ void System::Move()
 			cout<<"tesc="<<k<<endl; //In MC simulation time is often considered to be the number of MC steps
 			break;
       	}
-     
-
 		// double msd_step = 0.0; //mean square displacement of the overall system in a single sweep
 
 		// for(int j =0; j<100 ; j++) //
@@ -462,7 +460,7 @@ void System::Move()
 			latertime = W[0]; //take the indices for the initial time
 		else if(k>0) 
 			latertime = W[p-1]; //intialising present timestep indices with previous timestep indices
-		
+             
 		int Numcluster = AC.size(); //to store number of cluster in that timestep
 		nantc = AC.size(); //number of unsplitted cluster.
 		int track = 0; //iterates over every cluster
@@ -803,7 +801,7 @@ void System::Move()
 	      	}
 			
       	}
-		
+		cout<<"Worked"<<endl;
 		W[p]=latertime; 
 	
 		//code for evaluating msd in a window
@@ -830,7 +828,6 @@ void System::Move()
 							
 							int xm = int(W[i+tau_val][j]/NG);
 							int ym = W[i+tau_val][j]%NG; 
-							//cout<<x0<<" "<<y0<<" "<<" "<<xm<<" "<<ym<<endl;
 							r_square += (ym - y0)*(ym - y0) + (xm - x0)*(xm - x0); //summed over each ant
 						}
 					}
