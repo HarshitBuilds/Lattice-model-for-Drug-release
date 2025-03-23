@@ -818,7 +818,6 @@ void System::Move()
 						if(W[i+tau_val][j]==-1||W[i+tau_val][j]>=(NG_new)) //condition for ant to be outside bottom lattice
 						{
 							n1--;
-							continue;
 						}
 						else //if inside then compute msd for that ant
 						{
@@ -853,21 +852,20 @@ void System::Move()
 					int n1 = NANT; //number of ants in the bottom lattice at time t = i + tau
 					for(int j=0;j<NANT;j++)
 					{ //add condition for exit from bottom part or outside then no evaluation.
-					if(W[i+tau_val][j]==-1||W[i+tau_val][j]>=(NG_new)) //condition for ant to be outside bottom lattice
-					{
-						n1--;
-						continue;
-					}
-					else
-					{
-						int x0 = int(W[i][j]/NG);
-						int y0 = W[i][j]%NG;
-						
-						int xm = int(W[i+tau_val][j]/NG);
-						int ym = W[i+tau_val][j]%NG; 
-						
-						r_square += ((ym*ym) - (y0*y0)) + ((xm*xm) - (x0*x0)); //summed over each ant
-					}
+						if(W[i+tau_val][j]==-1||W[i+tau_val][j]>=(NG_new)) //condition for ant to be outside bottom lattice
+						{
+							n1--;
+						}
+						else
+						{
+							int x0 = int(W[i][j]/NG);
+							int y0 = W[i][j]%NG;
+							
+							int xm = int(W[i+tau_val][j]/NG);
+							int ym = W[i+tau_val][j]%NG; 
+							
+							r_square += (ym - y0)*(ym - y0) + (xm - x0)*(xm - x0); //summed over each ant
+						}
 					}
 					r_square = r_square/(n1);
 					msd.push_back(r_square); 
