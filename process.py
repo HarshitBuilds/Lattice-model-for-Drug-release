@@ -110,10 +110,10 @@ os.chdir("/home/root1/Desktop/LatticeCodes/Trials")
 percent_file = "MSD.txt"
 if not os.path.exists(percent_file): #if MSD.txt not present then create 
     with open(percent_file, 'a') as f:
-        print("Tau", "\t", "MSD","\t", "MC runs",file=f)
+        print("Tau", "\t", "MSD",file=f)
         
 with open(percent_file, 'a') as f: #if MSD.txt already present
-    print(tau, "\t",mean_r_square,"\t", len(msd) ,file=f)     
+    print(tau, "\t",mean_r_square, file=f)     
           
 
         
