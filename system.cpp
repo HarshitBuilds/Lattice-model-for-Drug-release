@@ -527,7 +527,6 @@ void System::Move()
 		  		else
 		  		{
 		    		newcells.push_back(C[cellindex].nbrs[r]); //wall condition passed for that ant
-
 		    		//cout<<cellindex<<","<<C[cellindex].nbrs[r]<<" r ="<<r<<endl;
 					
 					//commenting coordinate code
@@ -566,7 +565,10 @@ void System::Move()
 	      	{
 		  		continue; // go to next cluster
 	      	}
-	      
+			//cout<<newcells.size()<<endl;
+			//for(int m=0; m<newcells.size(); m++)
+				//cout<<newcells[m]<<" ";	
+
 	      	bool newwall=false;
 	      	/*check whether there are wall between new cells*/
 	      	for(int m=0; m<newcells.size(); m++)
@@ -602,7 +604,6 @@ void System::Move()
 		  			break;
 	      	}
 
-
 	      	if(newwall) //frienship condition non satisfied. Move to the next cluster.
 				continue;
 	      
@@ -632,18 +633,17 @@ void System::Move()
 	      	}
 	      	else //movement is possible for that cluster
 	      	{
-		  		i=0;
+		  		i=0; //to iterate over the newcells and oldcells
 		  		it2=(*it).cells.begin(); 
 		  		/*it5=(*it).newCoordinates.begin();*/
 		  		while(it2!=(*it).cells.end()) //iterating over the different ants in that cluster
 		  		{
 		      		int cellindex=(*it2);
-
 					//updating the indices vector in latertime for this cluster
-					for(int j=0;j<NANT;j++)
+					for(int idx=0;idx<NANT;idx++)
 							{
-								if(oldcells[i]==latertime[j])
-									latertime[j] = newcells[i]; //new index of the corresponding ant
+								if(oldcells[i]==latertime[idx])
+									latertime[idx] = newcells[i]; //new index of the corresponding ant
 							}
 		      		if(newcells[i]==-1)
 		      		{  
@@ -651,6 +651,7 @@ void System::Move()
 						{
 							C[oldcells[i]].isAnt = true; //reject the move 
 							check = true;
+							it2++;
 							//break; commenting so that entire cluster indices get updated with new values
 						}
 						else //from top
@@ -676,6 +677,7 @@ void System::Move()
 						bool deref = false;
 						
 						movetracker++; 
+						//cout<<"cell index "<<newcells[i]<<" ";
 						//cout<<"i="<<i<<"\tnewcell="<<newcells[i]<<endl;
 			  			C[newcells[i]].isAnt=true;
 						
@@ -791,17 +793,16 @@ void System::Move()
 					}
 					for(int m=0;m<newcells.size();m++) //replacing the new indices with old ones due to rejection
 					{
-						for(int j=0;j<NANT;j++)
+						for(int idx=0;idx<NANT;idx++)
 							{
-								if(newcells[m]==latertime[j])
-									latertime[j] = oldcells[m]; //replacing with the old indexes due to rejection of the move
+								if(newcells[m]==latertime[idx])
+									latertime[idx] = oldcells[m]; //replacing with the old indexes due to rejection of the move
 							}
 					}
 				}
 	      	}
 			
       	}
-		cout<<"Worked"<<endl;
 		W[p]=latertime; 
 	
 		//code for evaluating msd in a window
@@ -817,7 +818,7 @@ void System::Move()
 					{
 						if(W[i+tau_val][j]==-1||W[i+tau_val][j]>=(NG_new)) //condition for ant to be outside bottom lattice
 						{
-							n1--;
+							n1--; //add code to break if n1 reduces to 0
 						}
 						else //if inside then compute msd for that ant
 						{
@@ -1062,7 +1063,7 @@ void System::writeOutput()
 
 		}
 		//adding msd for the simulation to the output file
-		out<<mean_r_square<<endl;
+		out<<mean_r_square<<" "<<msd.size()<<endl;
 
 		//adding size distribution data to the last file
 		for(int i =0;i<sizedist.size();i++)

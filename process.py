@@ -16,8 +16,8 @@ nav2=[] #stddev n
 sar=[] #number of values for each t
 sizedist = [] #to store size distribution
 msd = [] #to store mean square displacement for all the MC simulations
-index=0
 for i in range(totalframes):
+  index=0 #to keep track of the line in that file
   fname="rand_"+str(i+1)+".dat"
   #print fname
   #f=open(fname,'r')
@@ -65,8 +65,6 @@ for i in range(totalframes):
     sizedist = [a + b for a, b in zip(sizedist, temp)] #processing size distribution across different files 
     
 
-if index!=len(nav):
-  print("error")
 f = open("AverageOverSimulations.txt", 'w')
 # print("t\tn\tfreq\tSD", file=f)
 print("t\tn\tn1\tn2", file=f)
@@ -112,10 +110,10 @@ os.chdir("/home/root1/Desktop/LatticeCodes/Trials")
 percent_file = "MSD.txt"
 if not os.path.exists(percent_file): #if MSD.txt not present then create 
     with open(percent_file, 'a') as f:
-        print("Tau", "\t", "MSD",file=f)
+        print("Tau", "\t", "MSD","\t", "MC runs",file=f)
         
 with open(percent_file, 'a') as f: #if MSD.txt already present
-    print(tau, "\t",mean_r_square, file=f)     
+    print(tau, "\t",mean_r_square,"\t", len(msd) ,file=f)     
           
 
         
