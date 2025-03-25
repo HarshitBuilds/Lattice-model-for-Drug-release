@@ -818,7 +818,7 @@ void System::Move()
 					{
 						if(W[i+tau_val][j]==-1||W[i+tau_val][j]>=(NG_new)) //condition for ant to be outside bottom lattice
 						{
-							n1--; //add code to break if n1 reduces to 0
+							n1--; 
 						}
 						else //if inside then compute msd for that ant
 						{
@@ -831,8 +831,14 @@ void System::Move()
 							r_square += (ym - y0)*(ym - y0) + (xm - x0)*(xm - x0); //summed over each ant
 						}
 					}
+					if(n1==0) //all ants have escaped the bottom layer
+						break;
+					
+					else
+					{
 						r_square = r_square/(n1);
 						msd.push_back(r_square); 
+					}
 				}
 				//evaluating msd for overall simulation from msd vector 
 				mean_r_square = 0;
@@ -868,8 +874,13 @@ void System::Move()
 							r_square += (ym - y0)*(ym - y0) + (xm - x0)*(xm - x0); //summed over each ant
 						}
 					}
-					r_square = r_square/(n1);
-					msd.push_back(r_square); 
+					if(n1==0) //all ants have escaped the bottom layer
+						break;
+					else
+					{
+						r_square = r_square/(n1);
+						msd.push_back(r_square); 
+					}
 				}
 				for (int i=0;i<tau_val;i++) //for changing tau values in the sliding window
 				{
