@@ -19,11 +19,12 @@ mkdir "$s" -p
 cd "$s"
 sweeps=100000 #number of MC sweeps in simulation (ensure > tau_val max value)
 mcruns=100 #number of MC runs to average over
+is_top=0 #initialising ants 0 for bottom lattice, 1 for top lattice  
 for ((r=1;r<=mcruns;r++)); 
 do
-    ../ANT --WALLF1 "$w1" --WALLF2 "$w2" -p "$p" -a "$a" -r "$r" -s "$sweeps" -S 1000000 -n "$n" -x "$x" --PJUMP "$pj" --tau_val "$tau_val"
+    ../ANT --WALLF1 "$w1" --WALLF2 "$w2" -p "$p" -a "$a" -r "$r" -s "$sweeps" -S 1000000 -n "$n" -x "$x" --PJUMP "$pj" --tau_val "$tau_val" --is_top "$is_top"
 done
-python3 ../process.py "$mcruns" "$a" "$w1" "$w2" "$x" "$sweeps" "$tau_val" #processing part of the code 
+python3 ../process.py "$mcruns" "$a" "$w1" "$w2" "$x" "$sweeps" "$tau_val" "$is_top" #processing part of the code 
 #find . -maxdepth 1 -name "*.dat" -print0 | xargs -0 rm #to remove the .dat files produced 
 cd ..
 done

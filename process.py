@@ -8,6 +8,7 @@ w2=float(sys.argv[4])
 interface=int(sys.argv[5])
 maxsweeps=int(sys.argv[6])
 tau = int(sys.argv[7]) #tau for calculating msd
+is_top = int(sys.argv[8]) #0 for bottom lattice and 1 for upper lattice
 thalfav=0.0 #average thalf
 nav=[] #average n 
 nav_lower=[] #average n lower lattice
@@ -110,7 +111,7 @@ os.chdir("/home/root1/Desktop/LatticeCodes/Trials")
 percent_file = "MSD.txt"
 if not os.path.exists(percent_file): #if MSD.txt not present then create 
     with open(percent_file, 'a') as f:
-        print("Tau", "\t", "MSD",file=f)
+        print("Tau", "\t", "MSD","\t", is_top, file=f)
         
 with open(percent_file, 'a') as f: #if MSD.txt already present
     print(tau, "\t",mean_r_square, file=f)     

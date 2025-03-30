@@ -14,12 +14,22 @@ void System::CreateAnts()
 	auto duration = now.time_since_epoch();
 	unsigned seed = static_cast<unsigned>(duration.count()) ^ std::hash<std::thread::id>{}(std::this_thread::get_id());
     gsl_rng_set(gsl_r,RANDOMSEED /*time(NULL)*/ /*seed*/);
+	if(is_top==0) { //bottom lattice
 	int* cellindex = new int[NG_new];//index of all possible positions in bottom lattice
 	for (int i = 0; i < NG_new; i++)
       cellindex[i]=i;
     int* filledcells=new int[NANT]; //index of all possible cells occupied by ants
     gsl_ran_shuffle(gsl_r, cellindex, NG_new, sizeof(int)); //for shuffling the order of elements inside the array
     gsl_ran_choose(gsl_r, filledcells, NANT, cellindex, NG_new, sizeof(int)); //randomly choosing NANT entries from cellindex and passing it to filledcells.
+	}
+	else{  //top lattice
+	int* cellindex = new int[(NG2 - NG_new)];//index of all possible positions in top lattice
+	for (int i = 0; i < (NG2-NG_new); i++)
+      cellindex[i]=i+NG_new;
+    int* filledcells=new int[NANT]; //index of all possible cells occupied by ants
+    gsl_ran_shuffle(gsl_r, cellindex, NG2 - NG_new, sizeof(int)); //for shuffling the order of elements inside the array
+    gsl_ran_choose(gsl_r, filledcells, NANT, cellindex, NG2-NG_new, sizeof(int)); //randomly choosing NANT entries from cellindex and passing it to filledcells.
+	}
     vector<int> initialtime;
 	for(int i=0; i<NANT; i++)
     {
@@ -283,7 +293,7 @@ void System::CreateAntClusters() //for merging clusters
 			
 		for(it2=(*itc2).cells.begin(); it2!=(*itc2).cells.end(); it2++)//iterates over cells in second cluster
 		{
-			if (C[*it2].row >= x)
+			if (C[*it2].row >= x) //if in top lattice move to the next cluster
 				continue;
 		    //proceed only if both cells have ants 
 		    if(C[*it1].isAnt && C[*it2].isAnt) 
@@ -347,7 +357,7 @@ void System::CreateAntClusters() //for merging clusters
 	
 }
 
-//comment out the coordinate codes.
+
 void System::Move()
 {
   const gsl_rng_type * gsl_T;
@@ -497,8 +507,6 @@ void System::Move()
 	      
 	      	//choose random number between 0 to 3
 	      	int r=gsl_rng_uniform_int(gsl_r,4);
-	      	/*it5=(*it).newCoordinates.begin();*/
-	      	//cout<<(*it5).x<<","<<(*it5).y<<", negihbour move"<<r<<endl;
 			
 	      	for(it2=(*it).cells.begin(); it2!=(*it).cells.end(); it2++) //for checking the wall condition for that cluster
 	      	{
@@ -725,6 +733,11 @@ void System::Move()
 								//code to reject the move
 								C[oldcells[i]].isAnt = true; 
 								C[newcells[i]].isAnt = false;
+								for(int idx=0;idx<NANT;idx++) //updating the latertime vector with oldcells list
+								{
+									if(newcells[i]==latertime[idx])
+										latertime[idx] = oldcells[i]; 
+								}
 								break;
 							}
 							else
@@ -808,6 +821,8 @@ void System::Move()
 		//code for evaluating msd in a window
 		if(p==(2*tau_val)-1||k==MAXSWEEPS-1)
 		{
+		if(is_top==0) //for bottom lattice
+		{
 			if(k==MAXSWEEPS-1) //last iteration
 			{
 				for(int i=0;i<=p-tau_val;i++) 
@@ -858,7 +873,7 @@ void System::Move()
 					double r_square = 0; //r square for a particular interval.
 					int n1 = NANT; //number of ants in the bottom lattice at time t = i + tau
 					for(int j=0;j<NANT;j++)
-					{ //add condition for exit from bottom part or outside then no evaluation.
+					{ //condition for exit from bottom lattice or outside then no evaluation.
 						if(W[i+tau_val][j]==-1||W[i+tau_val][j]>=(NG_new)) //condition for ant to be outside bottom lattice
 						{
 							n1--;
@@ -889,6 +904,89 @@ void System::Move()
 				p = tau_val; //bringing p to the center.
 			}
 		}	
+		else //for top lattice
+		{
+			if(k==MAXSWEEPS-1) //last iteration
+			{
+				for(int i=0;i<=p-tau_val;i++) 
+				{
+					double r_square = 0; //r square for a particular interval.
+					int n2 = NANT; //number of ants in the top lattice at time t = i + tau
+					for(int j=0;j<NANT;j++)
+					{
+						if(W[i+tau_val][j]==-1||W[i+tau_val][j]<(NG_new)) //condition for ant to be outside bottom lattice
+						{
+							n2--; 
+						}
+						else //if inside then compute msd for that ant
+						{	
+							int x0 = int(W[i][j]/NG);
+							int y0 = W[i][j]%NG;
+							
+							int xm = int(W[i+tau_val][j]/NG);
+							int ym = W[i+tau_val][j]%NG; 
+							r_square += (ym - y0)*(ym - y0) + (xm - x0)*(xm - x0); //summed over each ant
+						}
+					}
+					if(n2==0) //all ants have escaped the top layer
+						break;
+					
+					else
+					{
+						r_square = r_square/(n2);
+						msd.push_back(r_square); 
+					}
+				}
+				//evaluating msd for overall simulation from msd vector 
+				mean_r_square = 0;
+				
+				for(int i =0;i<msd.size();i++)
+				{
+					mean_r_square += msd[i];
+				}  
+				mean_r_square = mean_r_square/msd.size();
+				
+			}
+
+			else
+			{
+				for(int i=0;i<tau_val;i++) //in every window tau r^2 are evaluated 
+				{
+					double r_square = 0; //r square for a particular interval.
+					int n2 = NANT; //number of ants in the top lattice at time t = i + tau
+					for(int j=0;j<NANT;j++)
+					{ //condition for exit from top lattice or outside then no evaluation.
+						if(W[i+tau_val][j]==-1||W[i+tau_val][j]<(NG_new)) //condition for ant to be outside top lattice
+						{
+							n2--;
+						}
+						else
+						{
+							int x0 = int(W[i][j]/NG);
+							int y0 = W[i][j]%NG;
+							
+							int xm = int(W[i+tau_val][j]/NG);
+							int ym = W[i+tau_val][j]%NG; 
+							
+							r_square += (ym - y0)*(ym - y0) + (xm - x0)*(xm - x0); //summed over each ant
+						}
+					}
+					if(n2==0) //all ants have escaped the top layer
+						break;
+					else
+					{
+						r_square = r_square/(n2);
+						msd.push_back(r_square); 
+					}
+				}
+				for (int i=0;i<tau_val;i++) //for changing tau values in the sliding window
+				{
+					W[i] = W[i+tau_val];
+				}
+				p = tau_val; //bringing p to the center.
+			}
+		}
+		}
 		else
 		p++; //incrementing index of the W vector
 
