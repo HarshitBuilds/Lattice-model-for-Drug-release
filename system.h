@@ -46,7 +46,7 @@ class System
         ("WALLF2, 2", value<double>(&WALLF2)->default_value(0.0), "fraction of walls (default 0.5)")
         // ("x,x", value<int>(&x)->default_value(5))
 	    ("PWALL,p", value<double>(&PWALL)->default_value(0.0), "probability of crossing wall (0 for completely block, 1 if completely free) (default 0.0)")
-        ("ANTF,a", value<double>(&ANTF)->default_value(0.01), "fraction of ants (default 0.5)")
+        ("ANTF,a", value<double>(&ANTF)->default_value(0.05), "fraction of ants (default 0.5)")
         /*("ANTF2,a", value<double>(&ANTF2)->default_value(0.0), "fraction of ants (default 0.0)")*/
         ("NG,n", value<int>(&NG)->default_value(10), "#cells in each direction (default 10) ")
         ("x,x", value<int>(&x)->default_value(5), "lattice split factor (default 0.2*NG)")
@@ -74,7 +74,7 @@ class System
     NWALL1 = int(round(WALLF1 * double(NG * x + (x + 1) * NG))); //number of walls in first lattice.
     NWALL2 = int(round(WALLF2 * double((NG - x) * NG + (NG - x) * NG))); //number of walls in second lattice.
     NWALL = NWALL1 + NWALL2;
-	  cout<<"Input Read\n"<<NG2<<" cells, "<<NWALL1<<" walls in (lower lattice), "<<NWALL2<<" walls in (upper lattice), " << NANT << " ants \n"<< endl;
+	  cout<<"Input Read\n"<<NG2<<" cells, "<<NWALL1<<" walls in (lower lattice), "<<NWALL2<<" walls in (upper lattice), " <<NG_new<<" Cells in lower lattice "<< NANT << " ants \n";
     
     }
     

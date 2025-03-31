@@ -14,19 +14,19 @@ void System::CreateAnts()
 	auto duration = now.time_since_epoch();
 	unsigned seed = static_cast<unsigned>(duration.count()) ^ std::hash<std::thread::id>{}(std::this_thread::get_id());
     gsl_rng_set(gsl_r,RANDOMSEED /*time(NULL)*/ /*seed*/);
+	int* cellindex = nullptr;
+	int* filledcells=new int[NANT]; //index of all possible cells occupied by ants
 	if(is_top==0) { //bottom lattice
-	int* cellindex = new int[NG_new];//index of all possible positions in bottom lattice
+	cellindex = new int[NG_new];//index of all possible positions in bottom lattice
 	for (int i = 0; i < NG_new; i++)
       cellindex[i]=i;
-    int* filledcells=new int[NANT]; //index of all possible cells occupied by ants
     gsl_ran_shuffle(gsl_r, cellindex, NG_new, sizeof(int)); //for shuffling the order of elements inside the array
     gsl_ran_choose(gsl_r, filledcells, NANT, cellindex, NG_new, sizeof(int)); //randomly choosing NANT entries from cellindex and passing it to filledcells.
 	}
 	else{  //top lattice
-	int* cellindex = new int[(NG2 - NG_new)];//index of all possible positions in top lattice
+	cellindex = new int[(NG2 - NG_new)];//index of all possible positions in top lattice
 	for (int i = 0; i < (NG2-NG_new); i++)
       cellindex[i]=i+NG_new;
-    int* filledcells=new int[NANT]; //index of all possible cells occupied by ants
     gsl_ran_shuffle(gsl_r, cellindex, NG2 - NG_new, sizeof(int)); //for shuffling the order of elements inside the array
     gsl_ran_choose(gsl_r, filledcells, NANT, cellindex, NG2-NG_new, sizeof(int)); //randomly choosing NANT entries from cellindex and passing it to filledcells.
 	}
@@ -40,7 +40,6 @@ void System::CreateAnts()
 		coord.y = filledcells[i]%NG; //column number
 		coord.realX = coord.x;
 		coord.realY = coord.y;
-	
       	ac.cells.push_back(filledcells[i]); //stores index
       	ac.initialCoordinates.push_back(coord); //stores intial coordinates
       	ac.newCoordinates.push_back(coord); //stores new coordinates
