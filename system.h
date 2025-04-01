@@ -12,7 +12,7 @@ using namespace std;
 class System
 {
   public:
-    int RANDOMSEED, MAXSWEEPS,NG,NG2,NANT,NWALL,NWALL1,NWALL2, NSAMPLE, NG_new,x, tau_val,is_top; //split into 2 lattices.
+    int RANDOMSEED, MAXSWEEPS,NG,NG2,NANT,NWALL,NWALL1,NWALL2, NSAMPLE, NG_new,x,is_top; //split into 2 lattices.
     double WALLF1, WALLF2, PWALL, ANTF, PJUMP; //ANTF for the lower lattice.
     // 1 for lower lattice
     int NANT1 = 0;
@@ -51,7 +51,6 @@ class System
         ("NG,n", value<int>(&NG)->default_value(10), "#cells in each direction (default 10) ")
         ("x,x", value<int>(&x)->default_value(5), "lattice split factor (default 0.2*NG)")
         ("PJUMP,pj", value<double>(&PJUMP)->default_value(0.5), "probability of movement from top to bottom (default 0.5)")
-        ("tau_val,tau_val", value<int>(&tau_val)->default_value(5), "tau value for calculating mean square displacement")
         ("is_top,is_top", value<int>(&is_top)->default_value(0), "evaluating msd for top or bottom lattice");
         variables_map vm;
         store(parse_command_line(argc, argv, desc), vm);
@@ -78,7 +77,7 @@ class System
     
     }
     
-    vector<vector<int>> W; // the sliding window to store indices of 2*tau timesteps at a given time
+    vector<vector<int>> W; // to store indices of MAXSWEEPS timesteps (throughout the simulation)
     list<AntCluster> AC;   //list of ant clusters, in the beginning all ants are an independent cluster
     void CreateAnts(); 
     void CreateAntClusters(); //for blind ant case
@@ -89,11 +88,10 @@ class System
     vector<int> tent1;
     vector<int> tent2;
     vector<int> sizedist; //to store # of cluster of each size
-    vector<double> msd; //for storing msd for every steps followed by averaging
+    vector<double> msd; //for storing msd for every tau and printing to the .dat
     int *walls1; //for first lattice 
     int *walls2; //for second lattice
     void CreateWalls();
-    double mean_r_square; //overall mean square displacement for particular tau value
     vector<Cell> C; //vector of cells
     void CreateCells();
     

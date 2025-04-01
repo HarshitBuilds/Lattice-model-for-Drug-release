@@ -5,7 +5,7 @@
 using namespace std;
 void System::CreateAnts()
 {
-	W.resize(2*tau_val, vector<int> (NANT,0));
+	W.resize(MAXSWEEPS, vector<int> (NANT,0));
     const gsl_rng_type * gsl_T;
     gsl_rng * gsl_r;
     gsl_T = gsl_rng_default;
@@ -817,174 +817,95 @@ void System::Move()
       	}
 		W[p]=latertime; 
 	
-		//code for evaluating msd in a window
-		if(p==(2*tau_val)-1||k==MAXSWEEPS-1)
+		//code for evaluating msd for all the windows for all the taus
+		if(k==MAXSWEEPS-1)
 		{
 		if(is_top==0) //for bottom lattice
-		{
-			if(k==MAXSWEEPS-1) //last iteration
 			{
-				for(int i=0;i<=p-tau_val;i++) 
+			for(int tau_val=1;tau_val<=MAXSWEEPS;tau_val+=1000) 
 				{
-					double r_square = 0; //r square for a particular interval.
-					int n1 = NANT; //number of ants in the bottom lattice at time t = i + tau
-					for(int j=0;j<NANT;j++)
+					double total_r_square  = 0; //for all the intervals at a given tau
+					int count =  MAXSWEEPS-tau_val;
+				for(int i=0;i<MAXSWEEPS-tau_val;i++) //all the intervals  
 					{
-						if(W[i+tau_val][j]==-1||W[i+tau_val][j]>=(NG_new)) //condition for ant to be outside bottom lattice
+						double r_square = 0; //r square for a interval.
+						int n1 = NANT; //number of ants in the bottom lattice at time t = i + tau
+						for(int j=0;j<NANT;j++)
 						{
-							n1--; 
+							if(W[i+tau_val][j]==-1||W[i+tau_val][j]>=(NG_new)) //condition for ant to be outside bottom lattice
+							{
+								n1--; 
+							}
+							else //if inside then compute msd for that ant
+							{
+								
+								int x0 = int(W[i][j]/NG);
+								int y0 = W[i][j]%NG;
+								
+								int xm = int(W[i+tau_val][j]/NG);
+								int ym = W[i+tau_val][j]%NG; 
+								r_square += (ym - y0)*(ym - y0) + (xm - x0)*(xm - x0); //summed over each ant
+							}
 						}
-						else //if inside then compute msd for that ant
+						if(n1==0) //all ants have escaped the bottom layer
 						{
-							
-							int x0 = int(W[i][j]/NG);
-							int y0 = W[i][j]%NG;
-							
-							int xm = int(W[i+tau_val][j]/NG);
-							int ym = W[i+tau_val][j]%NG; 
-							r_square += (ym - y0)*(ym - y0) + (xm - x0)*(xm - x0); //summed over each ant
-						}
-					}
-					if(n1==0) //all ants have escaped the bottom layer
-						break;
-					
-					else
-					{
-						r_square = r_square/(n1);
-						msd.push_back(r_square); 
-					}
-				}
-				//evaluating msd for overall simulation from msd vector 
-				mean_r_square = 0;
-				
-				for(int i =0;i<msd.size();i++)
-				{
-					mean_r_square += msd[i];
-				}  
-				mean_r_square = mean_r_square/msd.size();
-				
-			}
-
-			else
-			{
-				for(int i=0;i<tau_val;i++) //in every window tau r^2 are evaluated 
-				{
-					double r_square = 0; //r square for a particular interval.
-					int n1 = NANT; //number of ants in the bottom lattice at time t = i + tau
-					for(int j=0;j<NANT;j++)
-					{ //condition for exit from bottom lattice or outside then no evaluation.
-						if(W[i+tau_val][j]==-1||W[i+tau_val][j]>=(NG_new)) //condition for ant to be outside bottom lattice
-						{
-							n1--;
+							count = i;
+							break;
 						}
 						else
 						{
-							int x0 = int(W[i][j]/NG);
-							int y0 = W[i][j]%NG;
-							
-							int xm = int(W[i+tau_val][j]/NG);
-							int ym = W[i+tau_val][j]%NG; 
-							
-							r_square += (ym - y0)*(ym - y0) + (xm - x0)*(xm - x0); //summed over each ant
+							r_square = r_square/(n1);
+							total_r_square += r_square;
 						}
 					}
-					if(n1==0) //all ants have escaped the bottom layer
-						break;
-					else
-					{
-						r_square = r_square/(n1);
-						msd.push_back(r_square); 
-					}
+					total_r_square = total_r_square/(count);
+					msd.push_back(total_r_square); //for a particular tau
 				}
-				for (int i=0;i<tau_val;i++) //for changing tau values in the sliding window
-				{
-					W[i] = W[i+tau_val];
-				}
-				p = tau_val; //bringing p to the center.
-			}
-		}	
+				
+			}	
 		else //for top lattice
 		{
-			if(k==MAXSWEEPS-1) //last iteration
-			{
-				for(int i=0;i<=p-tau_val;i++) 
+			for(int tau_val=1;tau_val<=MAXSWEEPS;tau_val+=1000) 
 				{
-					double r_square = 0; //r square for a particular interval.
-					int n2 = NANT; //number of ants in the top lattice at time t = i + tau
-					for(int j=0;j<NANT;j++)
+					double total_r_square = 0; //for all the intervals at a given tau
+					int count=MAXSWEEPS-tau_val;
+					for(int i=0;i<MAXSWEEPS-tau_val;i++) //all the intervals  
 					{
-						if(W[i+tau_val][j]==-1||W[i+tau_val][j]<(NG_new)) //condition for ant to be outside bottom lattice
+						double r_square = 0; //r_square for an interval
+						int n2 = NANT; //number of ants in the top lattice at time t = i + tau
+						for(int j=0;j<NANT;j++)
 						{
-							n2--; 
+							if(W[i+tau_val][j]==-1||W[i+tau_val][j]<(NG_new)) //condition for ant to be outside bottom lattice
+							{
+								n2--; 
+							}
+							else //if inside then compute msd for that ant
+							{	
+								int x0 = int(W[i][j]/NG);
+								int y0 = W[i][j]%NG;
+								
+								int xm = int(W[i+tau_val][j]/NG);
+								int ym = W[i+tau_val][j]%NG; 
+								r_square += (ym - y0)*(ym - y0) + (xm - x0)*(xm - x0); //summed over each ant
+							}
 						}
-						else //if inside then compute msd for that ant
-						{	
-							int x0 = int(W[i][j]/NG);
-							int y0 = W[i][j]%NG;
-							
-							int xm = int(W[i+tau_val][j]/NG);
-							int ym = W[i+tau_val][j]%NG; 
-							r_square += (ym - y0)*(ym - y0) + (xm - x0)*(xm - x0); //summed over each ant
-						}
-					}
-					if(n2==0) //all ants have escaped the top layer
-						break;
-					
-					else
-					{
-						r_square = r_square/(n2);
-						msd.push_back(r_square); 
-					}
-				}
-				//evaluating msd for overall simulation from msd vector 
-				mean_r_square = 0;
-				
-				for(int i =0;i<msd.size();i++)
-				{
-					mean_r_square += msd[i];
-				}  
-				mean_r_square = mean_r_square/msd.size();
-				
-			}
-
-			else
-			{
-				for(int i=0;i<tau_val;i++) //in every window tau r^2 are evaluated 
-				{
-					double r_square = 0; //r square for a particular interval.
-					int n2 = NANT; //number of ants in the top lattice at time t = i + tau
-					for(int j=0;j<NANT;j++)
-					{ //condition for exit from top lattice or outside then no evaluation.
-						if(W[i+tau_val][j]==-1||W[i+tau_val][j]<(NG_new)) //condition for ant to be outside top lattice
+						if(n2==0) //all ants have escaped the top layer
 						{
-							n2--;
+							count = i;
+							break;
 						}
+						
 						else
 						{
-							int x0 = int(W[i][j]/NG);
-							int y0 = W[i][j]%NG;
-							
-							int xm = int(W[i+tau_val][j]/NG);
-							int ym = W[i+tau_val][j]%NG; 
-							
-							r_square += (ym - y0)*(ym - y0) + (xm - x0)*(xm - x0); //summed over each ant
+							r_square = r_square/(n2);
+							total_r_square += r_square;
 						}
 					}
-					if(n2==0) //all ants have escaped the top layer
-						break;
-					else
-					{
-						r_square = r_square/(n2);
-						msd.push_back(r_square); 
-					}
+					total_r_square = total_r_square/(count);
+					msd.push_back(total_r_square); //for a particular tau
 				}
-				for (int i=0;i<tau_val;i++) //for changing tau values in the sliding window
-				{
-					W[i] = W[i+tau_val];
-				}
-				p = tau_val; //bringing p to the center.
+				
 			}
-		}
 		}
 		else
 		p++; //incrementing index of the W vector
@@ -1171,7 +1092,8 @@ void System::writeOutput()
 
 		}
 		//adding msd for the simulation to the output file
-		out<<mean_r_square<<" "<<msd.size()<<endl;
+		for(int i=0;i<msd.size();i++)
+		out<<msd[i]<<endl;
 
 		//adding size distribution data to the last file
 		for(int i =0;i<sizedist.size();i++)
