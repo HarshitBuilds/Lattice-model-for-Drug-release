@@ -71,7 +71,7 @@ def main():
     # Path to the MSD.txt file
     msd_file = "MSD.txt"
     
-    maxsweeps  = 100000 #total number of iterations 
+    maxsweeps  = 100000 #total number of MC sweeps in a simulation 
     # Read the data
     tau_values, msd_values = read_msd_data(msd_file)
 
