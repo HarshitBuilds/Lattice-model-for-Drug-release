@@ -71,12 +71,14 @@ def main():
     # Path to the MSD.txt file
     msd_file = "MSD.txt"
     
-    if not os.path.exists(msd_file):
-        print(f"Error: {msd_file} not found!")
-        return
-    
+    maxsweeps  = 100000 #total number of iterations 
     # Read the data
     tau_values, msd_values = read_msd_data(msd_file)
+
+    # Only keeping tau and msd values till tau <= maxsweeps/2
+    mask = tau_values <= maxsweeps/2
+    tau_values = tau_values[mask]
+    msd_values = msd_values[mask]
     
     if len(tau_values) == 0:
         print("No valid data found in the file.")
@@ -88,6 +90,8 @@ def main():
     if slope is not None:
         print(f"\nResults:")
         print(f"Number of data points: {len(tau_values)}")
+        print(f"Number of MC sweeps: {maxsweeps}")
+        print(f"last value of tau: {tau_values[-1]}")
         print(f"Slope: {slope:.6f}")
         print(f"Intercept: {intercept:.6f}")
         print(f"Diffusion coefficient (D = slope/2): {D:.6f}")

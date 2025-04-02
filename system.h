@@ -12,7 +12,7 @@ using namespace std;
 class System
 {
   public:
-    int RANDOMSEED, MAXSWEEPS,NG,NG2,NANT,NWALL,NWALL1,NWALL2, NSAMPLE, NG_new,x,is_top; //split into 2 lattices.
+    int RANDOMSEED, MAXSWEEPS,NG,NG2,NANT,NWALL,NWALL1,NWALL2, NSAMPLE, NG_new,x,is_top, tau_inc; //split into 2 lattices.
     double WALLF1, WALLF2, PWALL, ANTF, PJUMP; //ANTF for the lower lattice.
     // 1 for lower lattice
     int NANT1 = 0;
@@ -51,7 +51,8 @@ class System
         ("NG,n", value<int>(&NG)->default_value(10), "#cells in each direction (default 10) ")
         ("x,x", value<int>(&x)->default_value(5), "lattice split factor (default 0.2*NG)")
         ("PJUMP,pj", value<double>(&PJUMP)->default_value(0.5), "probability of movement from top to bottom (default 0.5)")
-        ("is_top,is_top", value<int>(&is_top)->default_value(0), "evaluating msd for top or bottom lattice");
+        ("is_top,is_top", value<int>(&is_top)->default_value(0), "evaluating msd for top or bottom lattice")
+        ("tau_inc,tau_inc", value<int>(&tau_inc)->default_value(1000), "value by which tau gets incremented");
         variables_map vm;
         store(parse_command_line(argc, argv, desc), vm);
         notify(vm);

@@ -822,7 +822,7 @@ void System::Move()
 		{
 		if(is_top==0) //for bottom lattice
 			{
-			for(int tau_val=1;tau_val<=MAXSWEEPS;tau_val+=1000) 
+			for(int tau_val=1;tau_val<=MAXSWEEPS;tau_val+=tau_inc) 
 				{
 					double total_r_square  = 0; //for all the intervals at a given tau
 					int count =  MAXSWEEPS-tau_val;
@@ -865,7 +865,7 @@ void System::Move()
 			}	
 		else //for top lattice
 		{
-			for(int tau_val=1;tau_val<=MAXSWEEPS;tau_val+=1000) 
+			for(int tau_val=1;tau_val<=MAXSWEEPS;tau_val+=tau_inc) 
 				{
 					double total_r_square = 0; //for all the intervals at a given tau
 					int count=MAXSWEEPS-tau_val;

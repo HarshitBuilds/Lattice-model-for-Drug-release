@@ -8,6 +8,7 @@ w2=float(sys.argv[4])
 interface=int(sys.argv[5])
 maxsweeps=int(sys.argv[6])
 is_top = int(sys.argv[7]) #0 for bottom lattice and 1 for upper lattice
+tau_inc = int(sys.argv[8]) #value by which tau gets incremented
 thalfav=0.0 #average thalf
 nav=[] #average n 
 nav_lower=[] #average n lower lattice
@@ -116,7 +117,7 @@ if not os.path.exists(percent_file): #if MSD.txt not present then create
         print("Tau", "\t", "MSD","\t", is_top, file=f)
 for i in range(len(msd)):        
   with open(percent_file, 'a') as f: #if MSD.txt already present
-    print(1000*i+1, "\t",msd[i], file=f)     #change 1000 to value by which tau is getting incremented.
+    print(tau_inc*i+1, "\t",msd[i], file=f)     #change 1000 to value by which tau is getting incremented.
           
 
         
