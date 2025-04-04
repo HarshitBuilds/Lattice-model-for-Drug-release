@@ -1,14 +1,14 @@
 for n in 200; #size of the lattice
 do
-for w1 in 0.1; #wall fraction
+for w1 in 0 0.1 0.2; #wall fraction in bottom layer
 do
-for w2 in 0.1; #wall fraction
+for w2 in 0 0.1 0.2; #wall fraction in upper layer
 do
 for p in 0.0; #probability of crossing wall
 do
 for a in 0.0025; #ant fraction
 do
-for x in 5; #partition between top and bottom layer (ensure < n)
+for x in 100; #partition between top and bottom layer (ensure < n)
 do 
 for pj in 0.0; #probability of moving from top to bottom
 do
@@ -24,7 +24,7 @@ do
     ../ANT --WALLF1 "$w1" --WALLF2 "$w2" -p "$p" -a "$a" -r "$r" -s "$sweeps" -S 1000000 -n "$n" -x "$x" --PJUMP "$pj" --is_top "$is_top" --tau_inc "$tau_inc"
 done
 python3 ../process.py "$mcruns" "$a" "$w1" "$w2" "$x" "$sweeps" "$is_top" "$tau_inc" #processing part of the code 
-#find . -maxdepth 1 -name "*.dat" -print0 | xargs -0 rm #to remove the .dat files produced 
+find . -maxdepth 1 -name "*.dat" -print0 | xargs -0 rm #to remove the .dat files produced 
 cd ..
 done
 done
