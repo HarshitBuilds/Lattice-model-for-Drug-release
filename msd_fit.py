@@ -91,7 +91,7 @@ def main():
         print(f"\nResults:")
         print(f"Number of data points: {len(tau_values)}")
         print(f"Number of MC sweeps: {maxsweeps}")
-        print(f"last value of tau: {tau_values[-1]}")
+        print(f"last value of tau: {tau_values[-1]}") #close to maxsweeps/2
         print(f"Slope: {slope:.6f}")
         print(f"Intercept: {intercept:.6f}")
         print(f"Diffusion coefficient (D = slope/2): {D:.6f}")

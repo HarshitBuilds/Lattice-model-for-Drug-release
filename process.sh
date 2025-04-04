@@ -8,7 +8,7 @@ for p in 0.0; #probability of crossing wall
 do
 for a in 0.0025; #ant fraction
 do
-for x in 195; #partition between top and bottom layer (ensure < n)
+for x in 5; #partition between top and bottom layer (ensure < n)
 do 
 for pj in 0.0; #probability of moving from top to bottom
 do
@@ -17,7 +17,7 @@ mkdir "$s" -p
 cd "$s"
 sweeps=100000 #number of MC sweeps in simulation 
 mcruns=100 #number of MC runs to average over
-is_top=0 #initialising ants 0 for bottom layer, 1 for top layer
+is_top=1 #initialising ants 0 for bottom layer, 1 for top layer
 tau_inc=1000 #add parameter for tau interval spacing.  
 for ((r=1;r<=mcruns;r++)); 
 do
