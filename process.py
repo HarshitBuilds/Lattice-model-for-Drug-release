@@ -17,12 +17,14 @@ nav2=[] #stddev n
 sar=[] #number of values for each t
 sizedist = [] #to store size distribution
 msd = [] #to store mean square displacement for all the MC simulations
+valid_tau = []
+nants_inlayer = []
 for i in range(totalframes):
   index=0 #to keep track of the line in that file
   fname="rand_"+str(i+1)+".dat"
   #print fname
   #f=open(fname,'r')
-  count = 0 #iterates over the tau values in msd 
+  count = 0 #iterates over the tau values in msd for that .dat file
   with open(fname) as f:
     line = f.readline()  # Read the first line
     while line: #iterating over lines in the file
@@ -36,29 +38,35 @@ for i in range(totalframes):
         if(index<=maxsweeps):
           l=line.split()
           t=int(l[1])
+          print("Value of index",index)
           n=int(l[3])
           n1=int(l[5]) #for lower lattice
           n2=int(l[7]) #for upper lattice
-          if t>=index:
+          
+          if(i==0): #For the first .dat file
             nav.append(n)
             nav_lower.append(n1)
             nav_upper.append(n2)
             nav2.append(n*n)
             sar.append(1)
-            index=index+1
-          # else:
-          #   nav[t]+=n
-          #   nav_lower[t]+=n1
-          #   nav_upper[t]+=n2  
-          #   nav2[t]+=n*n
-          #   sar[t]+=1   
+          else:
+            nav[t]+=n
+            nav_lower[t]+=n1
+            nav_upper[t]+=n2  
+            nav2[t]+=n*n
+            sar[t]+=1   
+          index += 1
         else: #for retrieving mean square displacement data from the .dat file
            l = line.split()
            if(i==0): #for the first .dat file
             msd.append(float(l[0]))
+            valid_tau.append(float(l[1]))
+            nants_inlayer.append(float(l[2]))
            else:
             msd[count]+=float(l[0])
-            count = count+1
+            valid_tau[count]+=float(l[1])
+            nants_inlayer[count]+=float(l[2])
+            count += 1
 
       line = next_line  # Move to the next line (or exit loop)
         
@@ -107,17 +115,18 @@ with open(percent_file, 'a') as f: #if PercentageTrapped.txt already present
     print(a, "\t",w1, "\t",w2,"\t",interface,"\t", x, "\t", x1, "\t", x2, file=f)
 
 for i in range(len(msd)):
-     msd[i] = msd[i]/(totalframes) #Final msd values averaged over different mc runs
-
+    if valid_tau[i]!=0:
+      msd[i] = msd[i]/(valid_tau[i]) #Final msd values averaged over different mc runse
+      nants_inlayer[i]=nants_inlayer[i]/(valid_tau[i])
 #add code for msd txt file similar to percentagetrapped.txt 
 os.chdir("/home/root1/Desktop/LatticeCodes/Trials")
 percent_file = "MSD.txt"
 if not os.path.exists(percent_file): #if MSD.txt not present then create 
     with open(percent_file, 'a') as f:
-        print("Tau", "\t", "MSD","\t", is_top, file=f)
+        print("Tau", "\t", "MSD","\t", "#ants_at_tau","\t",is_top, file=f)
 for i in range(len(msd)):        
   with open(percent_file, 'a') as f: #if MSD.txt already present
-    print(tau_inc*i+1, "\t",msd[i], file=f)     #change 1000 to value by which tau is getting incremented.
+    print(tau_inc*i+1, "\t",msd[i], "\t", nants_inlayer[i], file=f)     #change 1000 to value by which tau is getting incremented.
           
 
         

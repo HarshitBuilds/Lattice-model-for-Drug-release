@@ -851,17 +851,20 @@ void System::Move()
 						}
 						if(n1==0) //all ants have escaped the bottom layer
 						{
-							//count = i;
-							break;
+							//count = i; //number of intervals to average over
+							valid_tau.push_back(0); //For a tau, indicates not to consider this interval(tau)
+							//break;
 						}
 						else
 						{
+							valid_tau.push_back(1); ////For a tau, indicates to consider this interval(tau)
 							r_square = r_square/(n1);
 							//total_r_square += r_square;
 						}
 					//}
 					//total_r_square = total_r_square/(count);
 					//msd.push_back(total_r_square); //for a particular tau
+					nants_inlayer.push_back(n1);
 					msd.push_back(r_square); //for that particular tau
 				}
 				
@@ -899,17 +902,20 @@ void System::Move()
 						if(n2==0) //all ants have escaped the top layer
 						{
 							//count = i;
-							break;
+							//break;
+							valid_tau.push_back(0); //For a tau, indicates not to consider this interval(tau) for averaging later
 						}
 						
 						else
 						{
+							valid_tau.push_back(1); //For a tau, indicates not to consider this interval(tau) for averaging later
 							r_square = r_square/(n2);
 							//total_r_square += r_square;
 						}
 					
 					//total_r_square = total_r_square/(count);
 					//msd.push_back(total_r_square); //for a particular tau
+					nants_inlayer.push_back(n2);
 					msd.push_back(r_square); //for that particular tau
 				}
 				
@@ -1099,9 +1105,11 @@ void System::writeOutput()
 			}
 
 		}
+		if(msd.size()!=valid_tau.size()||msd.size()!=nants_inlayer.size())
+		cout<<"Error sizes not equal";
 		//adding msd for the simulation to the output file
 		for(int i=0;i<msd.size();i++)
-		out<<msd[i]<<endl;
+		out<<msd[i]<<"\t"<<valid_tau[i]<<"\t"<<nants_inlayer[i]<<endl;
 
 		//adding size distribution data to the last file
 		for(int i =0;i<sizedist.size();i++)

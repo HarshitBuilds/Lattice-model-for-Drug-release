@@ -90,6 +90,8 @@ class System
     vector<int> tent2;
     vector<int> sizedist; //to store # of cluster of each size
     vector<double> msd; //for storing msd for every tau and printing to the .dat
+    vector<int> valid_tau;
+    vector<int> nants_inlayer; //number of ants in upper/bottom layer at a timestep (for msd evaluation)
     int *walls1; //for first lattice 
     int *walls2; //for second lattice
     void CreateWalls();
