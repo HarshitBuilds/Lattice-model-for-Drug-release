@@ -8,7 +8,7 @@ for p in 0.0; #probability of crossing wall
 do
 for a in 0.0025; #ant fraction
 do
-for x in 100; #partition between top and bottom layer (ensure < n)
+for x in 50 100 150; #partition between top and bottom layer (ensure < n)
 do 
 for pj in 0.0; #probability of moving from top to bottom
 do

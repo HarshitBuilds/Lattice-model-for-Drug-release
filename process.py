@@ -95,9 +95,9 @@ for i in range(index):
   #nav2[i]=sqrt(float(nav2[i])/float(totalframes)-float(nav[i]*nav[i]))
   # print(i, "\t", nav[i], "\t", sar[i], "\t", nav2[i], file=f)
   print(i,"\t",nav[i],"\t",nav_lower[i],"\t", nav_upper[i],file =f)
-x  = (final_n/initial_n)*100 #percentage of ants trapped in entire lattice
-x1  = (final_n1/initial_n)*100 #percentage of ants trapped in lower lattice
-x2 = (final_n2/initial_n)*100 #percentage of ants trapped in upper lattice
+x  = round((final_n/initial_n)*100,2) #percentage of ants trapped in entire lattice
+x1  = round((final_n1/initial_n)*100,2) #percentage of ants trapped in lower lattice
+x2 = round((final_n2/initial_n)*100,2) #percentage of ants trapped in upper lattice
 #print(x,file=f)
 f.close()
 f = open("Sizedistribution.txt", "w")
@@ -109,7 +109,7 @@ os.chdir("/home/root1/Desktop/LatticeCodes/Trials")
 percent_file = "Percentagetrapped.txt"
 if not os.path.exists(percent_file): #if PercentageTrapped.txt not present then create 
     with open(percent_file, 'a') as f:
-        print("Ant Fraction", "\t", "w1", "\t", "w2","\t","x","\t", "PercentTrapped","\t", "Inlower","\t","Inupper", file=f)
+        print("a", "\t", "w1", "\t", "w2","\t","x","\t", "%Trapped","\t", "Inlower","\t","Inupper", file=f)
         
 with open(percent_file, 'a') as f: #if PercentageTrapped.txt already present
     print(a, "\t",w1, "\t",w2,"\t",interface,"\t", x, "\t", x1, "\t", x2, file=f)
