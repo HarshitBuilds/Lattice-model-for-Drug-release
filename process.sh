@@ -15,7 +15,7 @@ do
 s="run_w1_${w1}_w2_${w2}_p_${p}_a_${a}_n_${n}_x_${x}_pj_${pj}"
 mkdir "$s" -p 
 cd "$s"
-sweeps=100000 #number of MC sweeps in simulation 
+sweeps=1000000 #number of MC sweeps in simulation 
 mcruns=100 #number of MC runs to average over
 is_top=0 #initialising ants 0 for bottom layer (default), 1 for top layer
 tau_inc=1000 #add parameter for tau interval spacing.  

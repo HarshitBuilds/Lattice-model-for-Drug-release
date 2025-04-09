@@ -38,7 +38,6 @@ for i in range(totalframes):
         if(index<=maxsweeps):
           l=line.split()
           t=int(l[1])
-          print("Value of index",index)
           n=int(l[3])
           n1=int(l[5]) #for lower lattice
           n2=int(l[7]) #for upper lattice
@@ -59,10 +58,12 @@ for i in range(totalframes):
         else: #for retrieving mean square displacement data from the .dat file
            l = line.split()
            if(i==0): #for the first .dat file
+            print("Value of i ", i)
             msd.append(float(l[0]))
             valid_tau.append(float(l[1]))
             nants_inlayer.append(float(l[2]))
            else:
+            print("Value of i ", i)
             msd[count]+=float(l[0])
             valid_tau[count]+=float(l[1])
             nants_inlayer[count]+=float(l[2])
@@ -105,6 +106,17 @@ for i in range(len(sizedist)):
   sizedist[i] = float(sizedist[i])/float(totalframes)
   print(sizedist[i], file=f)
 f.close()
+for i in range(len(msd)):
+    if valid_tau[i]!=0:
+      msd[i] = msd[i]/(valid_tau[i]) #Final msd values averaged over different mc runs
+      nants_inlayer[i]=nants_inlayer[i]/(valid_tau[i])
+
+with open("MSD.txt", "w") as f:
+  print("Tau", "\t", "MSD","\t", "#ants_at_tau","\t",is_top, file=f)
+  for i in range(len(msd)):        
+    print(tau_inc*i+1, "\t",msd[i], "\t", nants_inlayer[i], file=f)  
+         
+
 os.chdir("/home/root1/Desktop/LatticeCodes/Trials")
 percent_file = "Percentagetrapped.txt"
 if not os.path.exists(percent_file): #if PercentageTrapped.txt not present then create 
@@ -114,19 +126,6 @@ if not os.path.exists(percent_file): #if PercentageTrapped.txt not present then 
 with open(percent_file, 'a') as f: #if PercentageTrapped.txt already present
     print(a, "\t",w1, "\t",w2,"\t",interface,"\t", x, "\t", x1, "\t", x2, file=f)
 
-for i in range(len(msd)):
-    if valid_tau[i]!=0:
-      msd[i] = msd[i]/(valid_tau[i]) #Final msd values averaged over different mc runse
-      nants_inlayer[i]=nants_inlayer[i]/(valid_tau[i])
-#add code for msd txt file similar to percentagetrapped.txt 
-os.chdir("/home/root1/Desktop/LatticeCodes/Trials")
-percent_file = "MSD.txt"
-if not os.path.exists(percent_file): #if MSD.txt not present then create 
-    with open(percent_file, 'a') as f:
-        print("Tau", "\t", "MSD","\t", "#ants_at_tau","\t",is_top, file=f)
-for i in range(len(msd)):        
-  with open(percent_file, 'a') as f: #if MSD.txt already present
-    print(tau_inc*i+1, "\t",msd[i], "\t", nants_inlayer[i], file=f)     #change 1000 to value by which tau is getting incremented.
-          
+
 
         

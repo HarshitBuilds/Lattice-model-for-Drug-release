@@ -416,11 +416,7 @@ void System::Move()
 			writeGNU(k);
 		}
 
-     	if(nant==0) //if all ants have escaped 
-      	{
-			cout<<"tesc="<<k<<endl; //In MC simulation time is often considered to be the number of MC steps
-			break;
-      	}
+     	
 		// double msd_step = 0.0; //mean square displacement of the overall system in a single sweep
 
 		// for(int j =0; j<100 ; j++) //
