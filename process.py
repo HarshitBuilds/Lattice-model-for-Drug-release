@@ -58,12 +58,10 @@ for i in range(totalframes):
         else: #for retrieving mean square displacement data from the .dat file
            l = line.split()
            if(i==0): #for the first .dat file
-            print("Value of i ", i)
             msd.append(float(l[0]))
             valid_tau.append(float(l[1]))
             nants_inlayer.append(float(l[2]))
            else:
-            print("Value of i ", i)
             msd[count]+=float(l[0])
             valid_tau[count]+=float(l[1])
             nants_inlayer[count]+=float(l[2])
@@ -84,21 +82,29 @@ f = open("AverageOverSimulations.txt", 'w')
 # print("t\tn\tfreq\tSD", file=f)
 print("t\tn\tn1\tn2", file=f)
 for i in range(index):
+  nav[i]=float(nav[i])/float(totalframes)
+  nav_lower[i]=float(nav_lower[i])/float(totalframes)
+  nav_upper[i]=float(nav_upper[i])/float(totalframes)
   if i==0:
     initial_n = nav[i]
   if i== index-1 :
     final_n = nav[i]
     final_n1 = nav_lower[i]
     final_n2 = nav_upper[i]
-  nav[i]=float(nav[i])/float(totalframes)
-  nav_lower[i]=float(nav_lower[i])/float(totalframes)
-  nav_upper[i]=float(nav_upper[i])/float(totalframes)
   #nav2[i]=sqrt(float(nav2[i])/float(totalframes)-float(nav[i]*nav[i]))
   # print(i, "\t", nav[i], "\t", sar[i], "\t", nav2[i], file=f)
   print(i,"\t",nav[i],"\t",nav_lower[i],"\t", nav_upper[i],file =f)
+
 x  = round((final_n/initial_n)*100,2) #percentage of ants trapped in entire lattice
 x1  = round((final_n1/initial_n)*100,2) #percentage of ants trapped in lower lattice
 x2 = round((final_n2/initial_n)*100,2) #percentage of ants trapped in upper lattice
+diff  = (initial_n-final_n)*(90/100) #90% of ant release
+t_90 = 0
+for i in range(index):
+  if((initial_n-nav[i])>=diff):
+    t_90 = i
+    break
+
 #print(x,file=f)
 f.close()
 f = open("Sizedistribution.txt", "w")
@@ -121,10 +127,10 @@ os.chdir("/home/root1/Desktop/LatticeCodes/Trials")
 percent_file = "Percentagetrapped.txt"
 if not os.path.exists(percent_file): #if PercentageTrapped.txt not present then create 
     with open(percent_file, 'a') as f:
-        print("a", "\t", "w1", "\t", "w2","\t","x","\t", "%Trapped","\t", "Inlower","\t","Inupper", file=f)
+        print("a", "\t", "w1", "\t", "w2","\t","x","\t", "%Trapped","\t", "Inlower","\t","Inupper","\t","t_90%" ,file=f)
         
 with open(percent_file, 'a') as f: #if PercentageTrapped.txt already present
-    print(a, "\t",w1, "\t",w2,"\t",interface,"\t", x, "\t", x1, "\t", x2, file=f)
+    print(a, "\t",w1, "\t",w2,"\t",interface,"\t", x, "\t", x1, "\t", x2,"\t",t_90 ,file=f)
 
 
 
