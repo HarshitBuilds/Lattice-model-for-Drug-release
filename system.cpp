@@ -404,9 +404,12 @@ void System::Move()
 				int num = 0; //number of elements in this cluster
 				for(it2=(*it).cells.begin(); it2!=(*it).cells.end(); it2++)
 				{
+					if (C[*it2].row >= x) //if in upperlayer move to the next cluster
+						break;
 					num++;
 				}
-				sizedist[num-1]++;
+				if(num>0)
+					sizedist[num-1]++;
 			}
 		}
       	if((k)%NSAMPLE==0) //NSAMPLE is the sampling frequency
