@@ -1,14 +1,14 @@
 for n in 200; #size of the lattice
 do
-for w1 in 0 0.1 0.2; #wall fraction in bottom layer
+for w1 in 0.1; #wall fraction in bottom layer
 do
-for w2 in 0 0.1 0.2; #wall fraction in upper layer
+for w2 in 0.1;  #wall fraction in upper layer
 do
 for p in 0.0; #probability of crossing wall
 do
 for a in 0.0025; #ant fraction
 do
-for x in 50 100 150; #partition between top and bottom layer (ensure < n)
+for x in 50 150; #partition between top and bottom layer (ensure < n) 
 do 
 for pj in 0.0; #probability of moving from top to bottom
 do
