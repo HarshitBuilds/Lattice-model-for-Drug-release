@@ -92,6 +92,7 @@ class System
     vector<double> msd; //for storing msd for every tau and printing to the .dat
     vector<int> valid_tau;
     vector<int> nants_inlayer; //number of ants in upper/bottom layer at a timestep (for msd evaluation)
+    vector<vector<int>> alonglayer; //distribution of ants across the layer.
     int *walls1; //for first lattice 
     int *walls2; //for second lattice
     void CreateWalls();

@@ -23,7 +23,7 @@ for ((r=1;r<=mcruns;r++));
 do
     ../ANT --WALLF1 "$w1" --WALLF2 "$w2" -p "$p" -a "$a" -r "$r" -s "$sweeps" -S 1000000 -n "$n" -x "$x" --PJUMP "$pj" --is_top "$is_top" --tau_inc "$tau_inc"
 done
-python3 ../process.py "$mcruns" "$a" "$w1" "$w2" "$x" "$sweeps" "$is_top" "$tau_inc" #processing part of the code 
+python3 ../process.py "$mcruns" "$a" "$w1" "$w2" "$x" "$sweeps" "$is_top" "$tau_inc" "$n" #processing part of the code 
 #find . -maxdepth 1 -name "*.dat" -print0 | xargs -0 rm #to remove the .dat files produced 
 cd ..
 done

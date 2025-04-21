@@ -9,6 +9,7 @@ interface=int(sys.argv[5])
 maxsweeps=int(sys.argv[6])
 is_top = int(sys.argv[7]) #0 for bottom lattice and 1 for upper lattice
 tau_inc = int(sys.argv[8]) #value by which tau gets incremented
+ng = int(sys.argv[9]) #size of the lattice
 thalfav=0.0 #average thalf
 nav=[] #average n 
 nav_lower=[] #average n lower lattice
@@ -122,6 +123,23 @@ with open("MSD.txt", "w") as f:
   for i in range(len(msd)):        
     print(tau_inc*i+1, "\t",msd[i], "\t", nants_inlayer[i], file=f)  
          
+num_points_per_line =  ng
+num_lines_per_layer_file = 11
+layer_data_sums = [[0.0] * num_points_per_line for _ in range(num_lines_per_layer_file)]
+for i in range(totalframes):
+  fname="layer_"+str(i+1)+".dat"
+  with open(fname) as f:
+    for line_index in range(num_lines_per_layer_file):
+      line = f.readline()  # Read the first line
+      parts = line.strip().split('\t')
+      for point_index in range(num_points_per_line):
+        layer_data_sums[line_index][point_index] += float(parts[point_index]/totalframes)
+
+with open("LayerDistribution.txt", "w") as f:
+  for i in range(num_lines_per_layer_file):
+    for j in range(num_points_per_line):
+      print(layer_data_sums[i][j], end="\t",file=f)
+    print(file=f)
 
 os.chdir("/home/root1/Desktop/LatticeCodes/Trials")
 percent_file = "Percentagetrapped.txt"
@@ -134,4 +152,6 @@ with open(percent_file, 'a') as f: #if PercentageTrapped.txt already present
 
 
 
-        
+
+
+     

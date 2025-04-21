@@ -6,6 +6,7 @@ using namespace std;
 void System::CreateAnts()
 {
 	W.resize(MAXSWEEPS, vector<int> (NANT,0));
+	alonglayer.resize(11,vector<int> (NG,0)); //stores distribution from t=0 to t=2*10^5
     const gsl_rng_type * gsl_T;
     gsl_rng * gsl_r;
     gsl_T = gsl_rng_default;
@@ -919,6 +920,19 @@ void System::Move()
 				}
 				
 			}
+			//add code for storing location at different z
+			int count = 0;
+			for(int i = 0;i<=200000;i+=20000) //timesteps
+			{
+				for(int j=0;j<NANT;j++)
+				{
+					int row = int(W[i][j]/NG);
+					alonglayer[count][row]++;
+				}
+				count++;
+			}
+			if(count!=11)
+			cout<<"error in alonglayer";
 		}
 		else
 		p++; //incrementing index of the W vector
@@ -1123,4 +1137,18 @@ void System::writeOutput()
 		out<<setw(6)<<"t"<<"\t"<<setw(12)<<i<<"\t"<<setw(6)<<"NANT"<<"\t"<<setw(12)<<n<<"\t"<<endl;
 	}*/
     out.close();
+	sprintf(FileName,"layer_%d.dat",RANDOMSEED); //Number of ants vs z data
+	cout<<FileName<<endl;
+	// sprintf(FileName, "rand_1.dat");
+    //find tesc_av 
+    ofstream out;
+    out.open(FileName);
+	for(int i=0;i<alonglayer.size();i++)
+	{
+		for(int j=0;j<NG;j++)
+		out<<alonglayer[i][j]<<"\t";
+		
+		out<<endl;
+	}
+	out.close();
 }
