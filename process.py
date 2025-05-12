@@ -133,7 +133,7 @@ for i in range(totalframes):
       line = f.readline()  # Read the first line
       parts = line.strip().split('\t')
       for point_index in range(num_points_per_line):
-        layer_data_sums[line_index][point_index] += float(parts[point_index]/totalframes)
+        layer_data_sums[line_index][point_index] += float(parts[point_index])/totalframes
 
 with open("LayerDistribution.txt", "w") as f:
   for i in range(num_lines_per_layer_file):
