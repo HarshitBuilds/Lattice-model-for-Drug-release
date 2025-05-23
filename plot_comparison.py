@@ -49,7 +49,7 @@ def plot_comparison(file1, file2):
     # Add labels and title
     plt.xlabel('$t_{MC}$', fontsize=14)
     plt.ylabel('Number of ants', fontsize=14)
-    plt.title('Comparison of Ant Distribution', fontsize=16)
+    plt.title('For entire lattice', fontsize=16)
     
     # Set logarithmic scale for x-axis
     plt.xscale('log')
@@ -69,7 +69,7 @@ def plot_comparison(file1, file2):
     plt.plot(t2, n2_lower, 'g--', linewidth=2, label=f'({file2})')
     plt.xlabel('$t_{MC}$', fontsize=14)
     plt.ylabel('Number of ants', fontsize=14)
-    plt.title('Comparison of Ant Distribution', fontsize=16)
+    plt.title('For hydrophobic layer', fontsize=16)
     
     # Set logarithmic scale for x-axis
     plt.xscale('log')
@@ -82,7 +82,7 @@ def plot_comparison(file1, file2):
     plt.tight_layout()
     plt.savefig('ReleaseProfile HydrophobicLayer (w1=0.0&w1=0.1).png', dpi=300)
     plt.close()
-    
+
     # Ploting for hydrophilic layer (upper lattice) data
     plt.figure(figsize=(12, 8))
 
@@ -91,7 +91,7 @@ def plot_comparison(file1, file2):
 
     plt.xlabel('$t_{MC}$', fontsize=14)
     plt.ylabel('Number of ants', fontsize=14)
-    plt.title('Comparison of Ant Distribution', fontsize=16)
+    plt.title('For hydrophilic layer', fontsize=16)
     
     # Set logarithmic scale for x-axis
     plt.xscale('log')
@@ -105,6 +105,28 @@ def plot_comparison(file1, file2):
     plt.savefig('ReleaseProfile HydrophilicLayer (w1=0.0&w1=0.1).png', dpi=300)
     plt.close()
 
+    plt.figure(figsize=(12, 8))
+    per1_total = 100 - ((n1_total / n1_total[0])* 100) #percentage of ants released 
+    per2_total = 100 - ((n2_total / n2_total[0])* 100) #percentage of ants released
+
+    plt.plot(t1, per1_total, 'r-', linewidth=2, label=f'({file1})')
+    plt.plot(t2, per2_total, 'r--', linewidth=2, label=f'({file2})')
+
+    plt.xlabel('$t_{MC}$', fontsize=14)
+    plt.ylabel('Percentage of ants released', fontsize=14)
+    plt.title('From entire lattice', fontsize=16)
+    
+    # Set logarithmic scale for x-axis and y-axis
+    plt.xscale('log')
+    plt.yscale('log')
+    # Add grid and legend
+    plt.grid(True, alpha=0.3)
+    plt.legend(loc='best')
+    
+    # Save the plot
+    plt.tight_layout()
+    plt.savefig('Percentage Released (w1=0.0&w1=0.1).png', dpi=300)
+    plt.close()
 def main():
     # Define file names (adjust as needed)
     file1 = "AverageOverSimulations(w1=0.0).txt"
