@@ -58,6 +58,7 @@ def plot_fit(tau_values, msd_values, slope, intercept, r_squared):
     plt.xlabel('τ')
     plt.ylabel('MSD')
     plt.title('Mean Square Displacement vs Tau')
+    plt.xscale('log') #Logaritmic scale for MC time
     plt.grid(True)
     plt.legend()
     
@@ -71,7 +72,7 @@ def main():
     # Path to the MSD.txt file
     msd_file = "MSD.txt"
     
-    maxsweeps  = 100000 #total number of MC sweeps in a simulation 
+    maxsweeps  = 1000000 #total number of MC sweeps in a simulation 
     # Read the data
     tau_values, msd_values = read_msd_data(msd_file)
 
