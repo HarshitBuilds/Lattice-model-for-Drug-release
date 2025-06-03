@@ -1141,7 +1141,7 @@ void System::writeOutput()
 	cout<<FileName<<endl;
 	// sprintf(FileName, "rand_1.dat");
     //find tesc_av 
-    ofstream out;
+    
     out.open(FileName);
 	for(int i=0;i<alonglayer.size();i++)
 	{
