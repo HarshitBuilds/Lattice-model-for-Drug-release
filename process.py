@@ -141,7 +141,7 @@ with open("LayerDistribution.txt", "w") as f:
       print(layer_data_sums[i][j], end="\t",file=f)
     print(file=f)
 
-os.chdir("/home/harshit/LatticeModel/Lattice-model-for-Drug-release")
+os.chdir("/home/harshit/Desktop/LatticeModel/Lattice-model-for-Drug-release")
 percent_file = "Percentagetrapped.txt"
 if not os.path.exists(percent_file): #if PercentageTrapped.txt not present then create 
     with open(percent_file, 'a') as f:
