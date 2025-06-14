@@ -926,7 +926,7 @@ void System::Move()
 			{
 				for(int j=0;j<NANT;j++)
 				{
-					if(W[i][j]!=-1) //ensure all ants are inside the lattice
+					if(W[i][j]!=-1) //ensure only ants inside the lattice are used for computing the layerwise distribution
 					{
 					int row = int(W[i][j]/NG);
 					alonglayer[count][row]++;
