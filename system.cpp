@@ -926,8 +926,11 @@ void System::Move()
 			{
 				for(int j=0;j<NANT;j++)
 				{
+					if(W[i][j]!=-1) //ensure all ants are inside the lattice
+					{
 					int row = int(W[i][j]/NG);
 					alonglayer[count][row]++;
+					}
 				}
 				count++;
 			}
