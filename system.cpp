@@ -100,8 +100,11 @@ void System::CreateWalls()
 	}
     gsl_ran_shuffle(gsl_r, wallindex1, NG * x + (x + 1) * NG, sizeof(int)); //shuffling walls in the first lattice
     gsl_ran_choose(gsl_r, walls1, NWALL1, wallindex1, NG * x + (x + 1) * NG, sizeof(int));
-	gsl_ran_shuffle(gsl_r, wallindex2, (NG - x) * NG + (NG - x) * NG, sizeof(int)); //comment out for x=1
-	gsl_ran_choose(gsl_r, walls2, NWALL2, wallindex2, (NG - x) * NG + (NG - x) * NG, sizeof(int)); //comment out for x=1
+	if(x!=NG) //for x=NG(only hydrophobic layer), walls2 and wallindex2 are empty arrays.
+	{
+		gsl_ran_shuffle(gsl_r, wallindex2, (NG - x) * NG + (NG - x) * NG, sizeof(int)); //comment out for x=1
+		gsl_ran_choose(gsl_r, walls2, NWALL2, wallindex2, (NG - x) * NG + (NG - x) * NG, sizeof(int)); //comment out for x=1
+	}
     gsl_rng_free (gsl_r);
 	delete[] wallindex1;
 	delete[] wallindex2;
