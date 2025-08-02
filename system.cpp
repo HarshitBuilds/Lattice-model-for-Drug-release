@@ -847,7 +847,7 @@ void System::Move()
 								int xm = int(W[tau_val][j]/NG);
 								int ym = W[tau_val][j]%NG; 
 								int delx = xm-x0;
-								if(abs(delx)>NG/2)
+								if(abs(delx)>NG/2) //PBC correction
 									delx = NG-delx;	
 								r_square += (ym - y0)*(ym - y0) + (delx)*(delx); //summed over each ant
 							}
@@ -896,7 +896,7 @@ void System::Move()
 									int xm = int(W[tau_val][j]/NG);
 									int ym = W[tau_val][j]%NG; 
 									int delx = xm-x0;
-									if(abs(delx)>NG/2)
+									if(abs(delx)>NG/2) //PBC correction
 										delx = NG-delx;	
 
 									r_square += (ym - y0)*(ym - y0) + (delx)*(delx); //summed over each ant

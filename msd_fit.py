@@ -52,15 +52,16 @@ def plot_fit(tau_values, msd_values, slope, intercept, r_squared):
     line_x = np.linspace(min(tau_values), max(tau_values), 100) #100 data points on x-axis 
     line_y = slope * line_x + intercept
     
-    plt.plot(line_x, line_y, color='red', 
-             label=f'Fit: MSD = {slope:.4f}τ + {intercept:.4f}\nR² = {r_squared:.4f}')
+    #plt.plot(line_x, line_y, color='red', 
+             #label=f'Fit: MSD = {slope:.4f}τ + {intercept:.4f}\nR² = {r_squared:.4f}')
     
     plt.xlabel('τ')
     plt.ylabel('MSD')
-    plt.title('Mean Square Displacement vs Tau')
+    plt.title('Mean Square Displacement vs Tau ') #Either Hydrophilic Layer or Hydrophobic Layer
     plt.xscale('log') #Logaritmic scale for MC time
+    plt.yscale('log') #Logaritmic scale for MSD
     plt.grid(True)
-    plt.legend()
+    #plt.legend()
     
     # Save the plot
     plot_filename = "msd_fit.png"
@@ -70,14 +71,14 @@ def plot_fit(tau_values, msd_values, slope, intercept, r_squared):
 
 def main():
     # Path to the MSD.txt file
-    msd_file = "MSD.txt"
+    msd_file = "MSD_x_0_pj_0.0_tau_inc_10.txt"
     
     maxsweeps  = 1000000 #total number of MC sweeps in a simulation 
     # Read the data
     tau_values, msd_values = read_msd_data(msd_file)
 
     # Only keeping tau and msd values till tau <= maxsweeps/2
-    mask = tau_values <= maxsweeps/2
+    mask = tau_values <= maxsweeps/5 #Only plotting for tau <= t_mc/5
     tau_values = tau_values[mask]
     msd_values = msd_values[mask]
     
