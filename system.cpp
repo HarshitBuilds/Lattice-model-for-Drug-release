@@ -583,7 +583,7 @@ void System::Move()
 	      	/*check whether there are wall between new cells*/
 	      	for(int m=0; m<newcells.size(); m++)
 	      	{
-				if(newcells[m]==-1)
+				if(newcells[m]==-1 && C[oldcells[i]].row >= x)
 		    		continue;
 
 				//all neigbors of newcells[m]
