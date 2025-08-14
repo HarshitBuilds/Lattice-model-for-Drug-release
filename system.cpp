@@ -583,8 +583,8 @@ void System::Move()
 	      	/*check whether there are wall between new cells*/
 	      	for(int m=0; m<newcells.size(); m++)
 	      	{
-				if(newcells[m]==-1 || C[newcells[m]].row >= x)
-		    		continue;
+				if(newcells[m]==-1 || C[newcells[m]].row >= x) //if ant has escaped the lattice or moved from hydrophobic to hydrophilic
+		    		continue;                                  //both cases in which friendship condition does not apply
 
 				//all neigbors of newcells[m]
 				for(int l=0; l<4; l++)
