@@ -11,9 +11,7 @@ void System::CreateAnts()
     gsl_rng * gsl_r;
     gsl_T = gsl_rng_default;
     gsl_r = gsl_rng_alloc (gsl_T);
-	auto now = std::chrono::high_resolution_clock::now(); //to increase randomness in the system
-	auto duration = now.time_since_epoch();
-	unsigned seed = static_cast<unsigned>(duration.count()) ^ std::hash<std::thread::id>{}(std::this_thread::get_id());
+	
     gsl_rng_set(gsl_r,RANDOMSEED /*time(NULL)*/ /*seed*/);
 	int* cellindex = nullptr;
 	int* filledcells=new int[NANT]; //index of all possible cells occupied by ants
@@ -63,10 +61,7 @@ void System::CreateWalls()
     gsl_rng * gsl_r;
     gsl_T = gsl_rng_default;
     gsl_r = gsl_rng_alloc (gsl_T);
-	auto now = std::chrono::high_resolution_clock::now(); //to increase randomness in the system
-	auto duration = now.time_since_epoch();
-	unsigned seed = static_cast<unsigned>(duration.count()) ^ std::hash<std::thread::id>{}(std::this_thread::get_id());
-    
+	
 	gsl_rng_set(gsl_r,RANDOMSEED /*seed*/); //gsl_r is a pointer to a random number generator object usedfor generating random numbers.
     int ntot=NG2+NG*(NG+1);  //leftmost same as rightmost wall
     int* wallindex1= new int[NG*x + (x+1)*NG]; //all cell boundaries in first lattice.
@@ -367,9 +362,6 @@ void System::Move()
   gsl_rng * gsl_r;
   gsl_T = gsl_rng_default;
   gsl_r = gsl_rng_alloc (gsl_T);
-  auto now = std::chrono::high_resolution_clock::now(); //to increase randomness in the system
-  auto duration = now.time_since_epoch();
-  unsigned seed = static_cast<unsigned>(duration.count()) ^ std::hash<std::thread::id>{}(std::this_thread::get_id());
   
   gsl_rng_set(gsl_r, RANDOMSEED/*seed*/); 
   int nantc=NANT;//number of remaining clusters
