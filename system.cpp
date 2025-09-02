@@ -5,7 +5,7 @@
 using namespace std;
 void System::CreateAnts()
 {
-	W.resize(MAXSWEEPS, vector<int> (NANT,0));
+	W.resize(MAXSWEEPS+1, vector<int> (NANT,0));
 	alonglayer.resize(11,vector<int> (NG,0)); //stores distribution from t=0 to t=2*10^5
     const gsl_rng_type * gsl_T;
     gsl_rng * gsl_r;
@@ -384,7 +384,7 @@ void System::Move()
     // ofstream out1;
     // out1.open(FileName1);
 	int movetracker = 0;
-	int p = 0; //index for W vector 
+	int p = 1; //index for W vector 
 	sizedist.resize(NANT);
 	std::fill(sizedist.begin(), sizedist.end(), 0);
   	for(int k=0; k<MAXSWEEPS; k++) //maximum number of MC sweeps. All ants are displaced in one MC sweep.
