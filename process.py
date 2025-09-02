@@ -115,8 +115,8 @@ for i in range(len(sizedist)):
 f.close()
 for i in range(len(msd)):
     if valid_tau[i]!=0:
-      msd[i] = msd[i]/(valid_tau[i]) #Final msd values averaged over different mc runs
-      nants_inlayer[i]=nants_inlayer[i]/(valid_tau[i])
+      msd[i] = msd[i]/float(valid_tau[i]) #Final msd values averaged over different mc runs
+      nants_inlayer[i]=nants_inlayer[i]/float(totalframes) #Average number of ants at a given tau_val across the different mc runs
 
 with open("MSD.txt", "w") as f:
   print("Tau", "\t", "MSD","\t", "#ants_at_tau","\t",is_top, file=f)
