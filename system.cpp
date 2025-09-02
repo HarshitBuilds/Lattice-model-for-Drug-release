@@ -853,7 +853,7 @@ void System::Move()
 								int ym = W[tau_val][j]%NG; 
 								int delx = xm-x0;
 								int dely = ym-y0;
-								if (dely > NG/2)       
+								if (dely > NG/2)  //Minimum image convention in the horizontal direction due to PBC
 									dely -= NG;
 								else if (dely < -NG/2) 
 									dely += NG;
@@ -905,7 +905,7 @@ void System::Move()
 									int ym = W[tau_val][j]%NG;
 									int delx = xm-x0; 
 									int dely = ym-y0;
-									if (dely > NG/2)       
+									if (dely > NG/2)  //Minimum image convention in the horizontal direction due to PBC     
 										dely -= NG;
 									else if (dely < -NG/2) 
 										dely += NG;
