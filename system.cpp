@@ -800,11 +800,24 @@ void System::Move()
 					}
 					for(int m=0;m<newcells.size();m++) //replacing the new indices with old ones due to rejection
 					{
-						for(int idx=0;idx<NANT;idx++)
+						if(newcells[m] != -1) //for all ants in the cluster not escaping from bottom, latertime is reupdated normally
+						{
+							for(int idx=0;idx<NANT;idx++)
+								{
+									if(newcells[m]==latertime[idx])
+										latertime[idx] = oldcells[m]; //replacing with the old indexes due to rejection of the move
+								}
+						}
+						else //for all ants escaping from the bottom, latertime is updated from previous timestep positions. 
+						{ 
+							for (int idx=0; idx<NANT; ++idx) 
 							{
-								if(newcells[m]==latertime[idx])
-									latertime[idx] = oldcells[m]; //replacing with the old indexes due to rejection of the move
-							}
+								if (W[p-1][idx] == oldcells[m]) {
+									latertime[idx] = oldcells[m];
+									break;
+								}
+        					}
+						}
 					}
 				}
 	      	}
@@ -839,9 +852,12 @@ void System::Move()
 								int xm = int(W[tau_val][j]/NG);
 								int ym = W[tau_val][j]%NG; 
 								int delx = xm-x0;
-								if(abs(delx)>NG/2) //PBC correction
-									delx = NG-delx;	
-								r_square += (ym - y0)*(ym - y0) + (delx)*(delx); //summed over each ant
+								int dely = ym-y0;
+								if (dely > NG/2)       
+									dely -= NG;
+								else if (dely < -NG/2) 
+									dely += NG;
+								r_square += (dely)*(dely) + (delx)*(delx); //summed over each ant
 							}
 						}
 						if(n1==0) //all ants have escaped the bottom layer
@@ -886,12 +902,15 @@ void System::Move()
 									int y0 = W[0][j]%NG;
 									
 									int xm = int(W[tau_val][j]/NG);
-									int ym = W[tau_val][j]%NG; 
-									int delx = xm-x0;
-									if(abs(delx)>NG/2) //PBC correction
-										delx = NG-delx;	
+									int ym = W[tau_val][j]%NG;
+									int delx = xm-x0; 
+									int dely = ym-y0;
+									if (dely > NG/2)       
+										dely -= NG;
+									else if (dely < -NG/2) 
+										dely += NG;
 
-									r_square += (ym - y0)*(ym - y0) + (delx)*(delx); //summed over each ant
+									r_square += (dely)*(dely) + (delx)*(delx); //summed over each ant
 								}
 							}
 						if(n2==0) //all ants have escaped the top layer
