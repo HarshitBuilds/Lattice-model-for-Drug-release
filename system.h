@@ -93,6 +93,7 @@ class System
     vector<int> valid_tau;
     vector<int> nants_inlayer; //number of ants in upper/bottom layer at a timestep (for msd evaluation)
     vector<vector<int>> alonglayer; //distribution of ants across the layer.
+    vector<vector<int>> lattice_positions; //position of ants inside the lattice.
     int *walls1; //for first lattice 
     int *walls2; //for second lattice
     void CreateWalls();

@@ -7,7 +7,8 @@ void System::CreateAnts()
 {
 	W.resize(MAXSWEEPS+1, vector<int> (NANT,0));
 	alonglayer.resize(11,vector<int> (NG,0)); //stores distribution from t=0 to t=2*10^5
-    const gsl_rng_type * gsl_T;
+    lattice_positions.resize(11,vector<int> (NANT,0));
+	const gsl_rng_type * gsl_T;
     gsl_rng * gsl_r;
     gsl_T = gsl_rng_default;
     gsl_r = gsl_rng_alloc (gsl_T);
@@ -940,6 +941,7 @@ void System::Move()
 			{
 				for(int j=0;j<NANT;j++)
 				{
+					lattice_positions[count][j] = W[i][j]; //storing the position(index) of all the ants for plotting later
 					if(W[i][j]!=-1) //ensure only ants inside the lattice are used for computing the layerwise distribution
 					{
 					int row = int(W[i][j]/NG);
@@ -1146,7 +1148,7 @@ void System::writeOutput()
 		{
 			out<<sizedist[i]<<"\t";
 		}
-		
+		out<<endl;
 	
 	
 	/*for (int i = finalt+2; i< MAXSWEEPS/10; i++)
@@ -1168,4 +1170,19 @@ void System::writeOutput()
 		out<<endl;
 	}
 	out.close();
+
+	if(RANDOMSEED==100)
+	{
+		sprintf(FileName,"LatticePositions"); //storing positions for visulization later
+		out.open(FileName);
+		for(int i=0;i<lattice_positions.size();i++)
+		{
+			for(int j=0;j<NANT;j++)
+			out<<lattice_positions[i][j]<<"\t";
+			
+			out<<endl;
+		}
+		out.close();
+	}
+	
 }
