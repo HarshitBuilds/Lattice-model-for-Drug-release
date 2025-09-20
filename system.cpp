@@ -645,8 +645,10 @@ void System::Move()
 					//updating the indices vector in latertime for this cluster
 					for(int idx=0;idx<NANT;idx++)
 							{
-								if(oldcells[i]==latertime[idx])
+								if(oldcells[i]==W[p-1][idx]) {
 									latertime[idx] = newcells[i]; //new index of the corresponding ant
+									break;
+								}
 							}
 		      		if(newcells[i]==-1)
 		      		{  
@@ -730,10 +732,11 @@ void System::Move()
 								C[newcells[i]].isAnt = false;
 								for(int idx=0;idx<NANT;idx++) //updating the latertime vector with oldcells list
 								{
-									if(newcells[i]==latertime[idx])
+									if(W[p-1][idx] == oldcells[i]) {
 										latertime[idx] = oldcells[i]; 
+										break;
+									}
 								}
-								break;
 							}
 							else
 							{
@@ -805,8 +808,10 @@ void System::Move()
 						{
 							for(int idx=0;idx<NANT;idx++)
 								{
-									if(newcells[m]==latertime[idx])
+									if(W[p-1][idx] == oldcells[m]) {
 										latertime[idx] = oldcells[m]; //replacing with the old indexes due to rejection of the move
+										break;
+									}
 								}
 						}
 						else //for all ants escaping from the bottom, latertime is updated from previous timestep positions. 
