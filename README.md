@@ -1,4 +1,4 @@
-👉 Ongoing project in Molecular Simulations and Drug Delivery Lab
+👉 Ongoing project in Molecular Simulations and Drug Delivery Lab, IIT Roorkee
 
 <u><b>Abstract of the work:</b></u>
 
