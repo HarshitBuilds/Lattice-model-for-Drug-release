@@ -737,6 +737,7 @@ void System::Move()
 										break;
 									}
 								}
+								break; //breaks out of the while loop
 							}
 							else
 							{
