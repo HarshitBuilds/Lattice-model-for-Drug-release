@@ -6,8 +6,8 @@ using namespace std;
 void System::CreateAnts()
 {
 	W.resize(MAXSWEEPS+1, vector<int> (NANT,0));
-	alonglayer.resize(11,vector<int> (NG,0)); //stores distribution from t=0 to t=2*10^5
-    lattice_positions.resize(11,vector<int> (NANT,0));
+	alonglayer.resize(5,vector<int> (NG,0)); //stores distribution from t=0 to t=2*10^5
+    lattice_positions.resize(5,vector<int> (NANT,0));
 	const gsl_rng_type * gsl_T;
     gsl_rng * gsl_r;
     gsl_T = gsl_rng_default;
@@ -943,20 +943,23 @@ void System::Move()
 			}
 			//add code for storing location at different z
 			int count = 0;
-			for(int i = 0;i<=200000;i+=20000) //timesteps
+			int conc_profile[] = {0,100,1000,10000,100000};//timesteps over which we analyse conc profile.
+			int conc_profile_size = 5;
+			// for(int i = 0;i<=200000;i+=20000) //timesteps
+			for(int i=0;i<conc_profile_size;i++)
 			{
 				for(int j=0;j<NANT;j++)
 				{
-					lattice_positions[count][j] = W[i][j]; //storing the position(index) of all the ants for plotting later
-					if(W[i][j]!=-1) //ensure only ants inside the lattice are used for computing the layerwise distribution
+					lattice_positions[count][j] = W[conc_profile[i]][j]; //storing the position(index) of all the ants for plotting later
+					if(W[conc_profile[i]][j]!=-1) //ensure only ants inside the lattice are used for computing the layerwise distribution
 					{
-					int row = int(W[i][j]/NG);
+					int row = int(W[conc_profile[i]][j]/NG);
 					alonglayer[count][row]++;
 					}
 				}
 				count++;
 			}
-			if(count!=11)
+			if(count!=5)
 			cout<<"error in alonglayer";
 		}
 		else
