@@ -943,7 +943,7 @@ void System::Move()
 			}
 			//add code for storing location at different z
 			int count = 0;
-			int conc_profile[] = {0,100,1000,10000,100000};//timesteps over which we analyse conc profile.
+			int conc_profile[] = {0,500,1000,5000,10000};//timesteps over which we analyse conc profile.
 			int conc_profile_size = 5;
 			// for(int i = 0;i<=200000;i+=20000) //timesteps
 			for(int i=0;i<conc_profile_size;i++)
