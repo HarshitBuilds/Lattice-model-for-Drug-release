@@ -6,8 +6,8 @@ using namespace std;
 void System::CreateAnts()
 {
 	W.resize(MAXSWEEPS+1, vector<int> (NANT,0));
-	alonglayer.resize(5,vector<int> (NG,0)); //stores distribution from t=0 to t=2*10^5
-    lattice_positions.resize(5,vector<int> (NANT,0));
+	alonglayer.resize(7,vector<int> (NG,0)); //stores distribution from t=0 to t=2*10^5
+    lattice_positions.resize(7,vector<int> (NANT,0));
 	const gsl_rng_type * gsl_T;
     gsl_rng * gsl_r;
     gsl_T = gsl_rng_default;
@@ -943,8 +943,8 @@ void System::Move()
 			}
 			//add code for storing location at different z
 			int count = 0;
-			int conc_profile[] = {0,500,1000,5000,10000};//timesteps over which we analyse conc profile.
-			int conc_profile_size = 5;
+			int conc_profile[] = {0,500,1000,5000,10000,50000,100000};//timesteps over which we analyse conc profile.
+			int conc_profile_size = 7;
 			// for(int i = 0;i<=200000;i+=20000) //timesteps
 			for(int i=0;i<conc_profile_size;i++)
 			{
@@ -959,7 +959,7 @@ void System::Move()
 				}
 				count++;
 			}
-			if(count!=5)
+			if(count!=7)
 			cout<<"error in alonglayer";
 		}
 		else

@@ -124,7 +124,7 @@ with open("MSD.txt", "w") as f:
     print(tau_inc*i+1, "\t",msd[i], "\t", nants_inlayer[i], file=f)  
          
 num_points_per_line =  ng
-num_lines_per_layer_file = 5
+num_lines_per_layer_file = 7
 layer_data_sums = [[0.0] * num_points_per_line for _ in range(num_lines_per_layer_file)]
 for i in range(totalframes):
   fname="layer_"+str(i+1)+".dat"
