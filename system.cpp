@@ -473,14 +473,15 @@ void System::Move()
       	{
 			//cout<<AC.size()<<endl;
 	      	/*nantc=AC.size();*/
-			/*int antcindex= gsl_rng_uniform_int(gsl_r, nantc);*/ //commented to ensure movement over every cluster
-			int antcindex = track; //points to the cluster to move 
-	      	//choose any antcluster randomly
-			if (nantc <= 0) 
+			if (nantc <= 0) //in case nantc becomes 0 due to splitting and escape of ants.
 			{
 				cout << "All splitted";
 				break;
 			}
+			int antcindex= gsl_rng_uniform_int(gsl_r, nantc); //commented to ensure movement over every cluster
+			//int antcindex = track; //points to the cluster to move 
+	      	//choose any antcluster randomly
+			
 
 	      	it=AC.begin();
 	      	for(int l=0; l<antcindex; l++) {
