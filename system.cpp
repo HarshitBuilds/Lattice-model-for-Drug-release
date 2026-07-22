@@ -1,4 +1,3 @@
-//ANTCODE: system.cpp System Class Function Definitions (Revision Date: February 12, 2017)
 //Defines the classes used in system.h  
 #include <thread>
 #include "system.h" 
