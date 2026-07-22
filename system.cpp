@@ -325,25 +325,7 @@ void System::CreateAntClusters() //for merging clusters
 	}
 
     }
-   /* cout<<AC.size()<<" clusters remaining\n";*/
-	/*cout << "ants in cluster ";*/
-	/*cout << " Number of clusters are " << AC.size() << endl;*/
-	//cout << "Ant indices are : ";
-	
-	// int count = 0; commented 
-	// for (itc1 = AC.begin(); itc1 != AC.end(); itc1++)
-	// {
-	// 	/*cout << (*itc1).cells.size()<<" ";*/
-	// 	for (it1 = (*itc1).cells.begin(); it1 != (*itc1).cells.end(); it1++)
-	// 	{
-	// 		cout << (*it1) << " ";
-	// 	}
-	// 	cout << ",";
-	// 	for (it1 = (*itc1).cells.begin(); it1 != (*itc1).cells.end(); it1++)
-	// 		count++;
-	// }
-	/*cout << "number of ants are "<<count<<endl;*/
-	//iterate over every cell in the lattice
+   
 	// cout << "number of clusters : " << AC.size()<<" "; commented out
 	/*cout << "Ant at index : ";
 	for (int i = 0; i < NG2; i++)
@@ -423,42 +405,7 @@ void System::Move()
 		// 	dist[j] = 0;
 		// }
 		//commenting coordinate code
-		//for(it = AC.begin(); it!=AC.end(); it++) //iterates over all the ant clusters
-  // 		{
-  // 			it3 = (*it).initialCoordinates.begin(); //initialising the iterator 
-  // 			it4 = (*it).newCoordinates.begin(); 
-  // 			
-  // 			//cout<<(*it3).x<<","<<(*it3).y<<"---->"<<(*it4).x<<","<<(*it4).y<<" real "<<(*it3).realX<<","<<(*it3).realY<<"---->"<<(*it4).realX<<","<<(*it4).realY<<endl;
-  // 			msd_step += double(pow(((*it4).realX - (*it3).realX), 2) + pow(((*it4).realY - (*it3).realY), 2))/double(NANT); 
-
-  // 			//claculating the distribution of ants (mean distance from the centre)
-  // 			MeanR = double(pow(((*it4).realX - double(NG+1)/2.0), 2) + pow(((*it4).realY - double(NG+1)/2.0), 2));
-  // 			RootMeanR = sqrt(MeanR);
-  // 			for(int j =0; j<100; j++) //purpose of this loop?
-  // 			{
-  // 				if(RootMeanR>=j && RootMeanR<j+1)
-  // 				{
-  // 					dist[j]++;
-  // 				}
-  // 			}
-		//}
-
-		//if((k)%NSAMPLE==0)
-  //    	{
-		//	out<<k<<'\t'<<msd_step<<'\t'<<sqrt(msd_step)<<endl;
-
-		//	out1<<" "<<endl;
-		//	out1<<" "<<endl;
-		//	out1<<" "<<endl;
-
-
-		//	for(int j =0; j<100; j++)
-  // 			{
-  // 				out1<<j+1<<'\t'<<dist[j]<<'\t'<<double(dist[j])/(4.0*PI*((j+1)*(j+1)-j*j))<<endl;
-  // 			}
-  // 			
-		//	//cout<<k<<'\t'<<msd_step<<endl;
-		//}
+		
 		vector<int> latertime;
 		if(k==0)
 			latertime = W[0]; //take the indices for the initial time
@@ -760,7 +707,6 @@ void System::Move()
 			  			(*it5).y=newCoord[i].y;
 			  			(*it5).realX=newCoord[i].realX;
 			  			(*it5).realY=newCoord[i].realY;*/
-			  			 //move to the next cell.
 			  			/*it5++;*/
 		      		}
 		      		i++;
