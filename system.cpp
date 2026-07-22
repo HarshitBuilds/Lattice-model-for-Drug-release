@@ -325,15 +325,8 @@ void System::CreateAntClusters() //for merging clusters
 	}
 
     }
-   
-	// cout << "number of clusters : " << AC.size()<<" "; commented out
-	/*cout << "Ant at index : ";
-	for (int i = 0; i < NG2; i++)
-	{
-		if (C[i].isAnt)
-			cout << i << " ";
-	}
-	cout << endl;*/
+	
+	
 	
 }
 
@@ -477,33 +470,11 @@ void System::Move()
 		  		else
 		  		{
 		    		newcells.push_back(C[cellindex].nbrs[r]); //wall condition passed for that ant
-		    		//cout<<cellindex<<","<<C[cellindex].nbrs[r]<<" r ="<<r<<endl;
 					
 					//commenting coordinate code
 		    		/*Coordinate acoordnew;
 		    		acoordnew.x = C[cellindex].nbrs[r]/NG;
 		    		acoordnew.y = C[cellindex].nbrs[r]%NG;*/
-
-		    		/*if(r==0)
-		    		{
-		    			acoordnew.realX = (*it5).realX;
-		    			acoordnew.realY = (*it5).realY - 1;
-		    		}else if(r==1)
-		    		{
-						acoordnew.realX = (*it5).realX;
-		    			acoordnew.realY = (*it5).realY + 1;
-		    		}else if(r==2)
-		    		{
-						acoordnew.realX = (*it5).realX + 1;
-		    			acoordnew.realY = (*it5).realY;		    			
-		    		}else
-		    		{
-
-						acoordnew.realX = (*it5).realX - 1;
-		    			acoordnew.realY = (*it5).realY;		    			
-		    		}*/
-
-		    		//cout<<acoordnew.x<<","<<acoordnew.y<<","<<acoordnew.realX<<","<<acoordnew.realY<<endl;
 		    		/*newCoord.push_back(acoordnew);*/
 		  		}
 
